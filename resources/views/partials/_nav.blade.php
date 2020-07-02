@@ -16,9 +16,9 @@
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link" href="{{ route('feedback') }}">{{ __('建議與問題') }}</a>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('schedule') }}">{{ __('練團表') }}</a>
                 </li>
@@ -33,9 +33,15 @@
                     @endif
                 @else
                     @admin
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('bandmanagement') }}">{{ __('樂團列表') }}</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('schedulemgm') }}">{{ __('練團表管理') }}</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('usermanagement') }}">{{ __('使用者管理') }}</a>
+                    </li>
                     @else
                     @endadmin
                     <li class="nav-item dropdown">
