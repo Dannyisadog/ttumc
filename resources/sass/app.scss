@@ -5,10 +5,15 @@
 @import 'variables';
 
 // Bootstrap
+@import './layouts.scss';
 @import '~bootstrap/scss/bootstrap';
 
-@import './layouts.scss';
 
 body, .table-dark {
     background-color: $dark-grey;
+}
+
+.card .login-card {
+    background-color: #2e3135;
+    color: #fff;
 }
