@@ -6,3 +6,9 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+@import './layouts.scss';
+
+body, .table-dark {
+    background-color: $dark-grey;
+}
