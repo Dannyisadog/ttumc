@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
+            <div class="card register-card" style="background-color: #34383d; color: #fff;">
                 <div class="card-header">{{ __('註冊') }}</div>
 
                 <div class="card-body">
