@@ -8,128 +8,91 @@ use App\Schedule as Schedule;
 use App\User as User;
 use Auth;
 use DB;
+use SweetAlert;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
     public function showSchedule()
     {
-        $schedule = DB::SELECT('SELECT a.name, b.title, b.starttime FROM users a, schedule b WHERE a.id = b.orderby AND b.valid="Y"');
-        $user = User::all();
-
         if (Auth::check()) {
-            $username = Auth::user()->name;
-            $userid = Auth::id();
-
-            $userordercount = DB::select("SELECT COUNT(*) as count FROM schedule WHERE title = '$username'");
-            $bandordercount = DB::select("SELECT name, ordercount as count FROM `band` WHERE belongto = $userid");
-
-            $usercanorder = true;
-            $bandcanorder = true;
-
-            if ($userordercount[0]->count >= 4) {
-                $usercanorder = false;
-            }
-
-            $bandordercount_arr = array();
-
-            foreach ($bandordercount as $item) {
-                if ($item->count < 4) {
-                    $bandcanorder = true;
-                    break;
-                } else {
-                    $bandcanorder = false;
-                }
-            }
-            foreach ($bandordercount as $item) {
-                $bandordercount_arr[$item->name] = $item->count;
-            }
-
-            $thisweek = strtotime("this week");
-
-            $usereachdayCount = DB::SELECT("SELECT title, DATE_FORMAT(starttime, '%Y-%m-%d') as starttime, COUNT(*) as count FROM schedule WHERE title = '$username' GROUP BY title, DATE_FORMAT(starttime, '%Y-%m-%d')");
-
-            $usereachdayCount_arr = array(0 => '', 1 => '', 2 => '', 3 => '', 4 => '', 5 => '', 6 => '');
-            foreach ($usereachdayCount as $item) {
-                $time = strtotime($item->starttime);
-                $day_num = ($time - $thisweek + 86400) / 86400;
-                $usereachdayCount_arr[$day_num] = $item->count;
-            }
-
-            if (User::belongBandCount() > 0) {
-                $userid = Auth::id();
-                $bandlist = Band::where('belongto', $userid)->get();
-                $bandeachdayCount_arr = array();
-                $bandseachdaycanorder_arr = array(0 => '', 1 => '', 2 => '', 3 => '', 4 => '', 5 => '', 6 => '');
-                foreach ($bandlist as $item) {
-                    $bandeachdayCount = DB::SELECT("SELECT title, DATE_FORMAT(starttime, '%Y-%m-%d') as starttime, COUNT(*) as count FROM schedule WHERE title = '$item->name' GROUP BY title, DATE_FORMAT(starttime, '%Y-%m-%d')");
-
-                    $tmp_arr = array(0 => '', 1 => '', 2 => '', 3 => '', 4 => '', 5 => '', 6 => '');
-
-                    foreach ($bandeachdayCount as $item2) {
-                        $time = strtotime($item2->starttime);
-                        $day_num = ($time - $thisweek + 86400) / 86400;
-                        $tmp_arr[$day_num] = $item2->count;
-                        if ($item2->count < 2) {
-                            $bandseachdaycanorder_arr[$day_num] = 1;
-                            break;
-                        } else {
-                            $bandseachdaycanorder_arr[$day_num] = 0;
-                        }
-                    }
-
-                    foreach ($bandeachdayCount as $item2) {
-                        $time = strtotime($item2->starttime);
-                        $day_num = ($time - $thisweek + 86400) / 86400;
-                        $tmp_arr[$day_num] = $item2->count;
-                    }
-
-                    $bandeachdayCount_arr[$item->name] = $tmp_arr;
-                }
-
-                return view('schedule', ['schedule' => $schedule, 'user' => $user, 'usereachdayCount' => $usereachdayCount_arr, 'bandeachdayCount' => $bandeachdayCount_arr, 'bandseachdaycanorder' => $bandseachdaycanorder_arr, 'userordercount' => $userordercount[0], 'bandlist' => $bandlist, 'usercanorder' => $usercanorder, 'bandcanorder' => $bandcanorder, 'bandordercount' => $bandordercount_arr]);
-            } else {
-                return view('schedule', ['schedule' => $schedule, 'user' => $user, 'usereachdayCount' => $usereachdayCount_arr, 'usercanorder' => $usercanorder, 'bandcanorder' => $bandcanorder, 'bandordercount' => $bandordercount, 'userordercount' => $userordercount[0]]);
-            }
-        } else {
-            return view('schedule', ['schedule' => $schedule, 'user' => $user]);
+            $user = Auth::user();
         }
+        $schedules = $this->getThisWeekSchedules();
+
+        $schedule_map = [];
+
+        foreach ($schedules as $schedule) {
+            $key = $schedule->starttime;
+            $user = User::find($schedule->orderby);
+            $schedule_map[$key] = [
+                "user_id" => $user->id,
+                "user_name" => $user->name,
+                "schedule_id" => $schedule->id
+            ];
+        }
+
+        $schedule_data = [];
+
+        if (isset($user)) {
+            $schedule_data['user'] = $user;
+        }
+        $schedule_data['schedule_map'] = $schedule_map;
+
+        return view(
+            'schedule',
+            $schedule_data
+        );
     }
     public function createSchedule(Request $request)
     {
         if (!Auth::check()) {
             return redirect()->route('schedule');
         }
-        $user = auth()->user()->id;
+        $user = Auth::user();
         $date = $request->input('date');
-        $title = $request->input('title');
 
-        $schedulefind = Schedule::where('starttime', $date)->first();
-        if ($schedulefind === null) {
-            $schedule = new Schedule;
-            $schedule->orderby = $user;
-            $schedule->title = $title;
-            $schedule->starttime = $date;
-            Band::where('name', $title)->where('belongto', $user)->update(["ordercount" => DB::raw('ordercount+1')]);
-            $schedule->save();
+        $schedule = Schedule::where('starttime', $date)->first();
 
-            return redirect()->route('schedule');
-        } else {
+        if ($schedule) {
             return redirect()->route('schedule');
         }
+
+        Schedule::create([
+            'title' => $user->name,
+            'orderby' => $user->id,
+            'starttime' => $date,
+        ]);
+
+        SweetAlert::success('預約成功');
+        return redirect()->route('schedule');
     }
     public function deleteSchedule(Request $request)
     {
         if (!Auth::check()) {
             return redirect()->route('schedule');
         }
-        $user = $request->input('userid');
-        $time = $request->input('date');
-        $title = $request->input('title');
 
-        Band::where('name', $title)->where('belongto', $user)->update(["ordercount" => DB::raw('ordercount-1')]);
-        $delete = Schedule::where('orderby', $user)->where('starttime', $time)->delete();
+        $user = Auth::user();
+        $schedule_id = $request->input("schedule_id");
 
+        $schedule = Schedule::where('id', $schedule_id)->first();
+
+        if (!$schedule) {
+            SweetAlert::error('預約時段不存在', 'Error Message');
+            return redirect()->route('schedule');
+            exit;
+        }
+
+        if ($schedule->orderby != $user->id) {
+            SweetAlert::error('無法刪除不屬於你的時段', 'Error Message');
+            return redirect()->route('schedule');
+            exit;
+        }
+
+        Schedule::destroy($schedule_id);
+
+        SweetAlert::success('取消成功');
         return redirect()->route('schedule');
     }
     public function showScheduleMgm()
@@ -186,6 +149,7 @@ class ScheduleController extends Controller
         if (!Auth::check()) {
             return redirect()->route('schedule');
         }
+
         $time = $request->input('time');
         $starttime = explode('-', $time)[1];
         $day = explode('-', $time)[0];
@@ -246,5 +210,15 @@ class ScheduleController extends Controller
         }
 
         return redirect()->route('schedule');
+    }
+
+    private function getThisWeekSchedules()
+    {
+        $week_first_day = date('Y-m-d', strtotime('monday this week'));
+        $week_last_day = date('Y-m-d', strtotime('monday this week') + 86400 * 7);
+        return Schedule::where('valid', 'Y')
+            ->where('starttime', '>=', $week_first_day)
+            ->where('starttime', '<', $week_last_day)
+            ->get();
     }
 }

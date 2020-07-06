@@ -3,6 +3,7 @@
 
 @include('partials._head')
 <body>
+    @include('sweetalert::alert')
     @yield('js-up')
     <div id="app">
         @include('partials._nav')
