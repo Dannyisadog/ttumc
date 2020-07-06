@@ -17,7 +17,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
+                <div class="card" style="background-color: rgb(52, 56, 61); color: rgb(255, 255, 255);">
                     <div class="card-header">{{ __('新增所屬樂團') }}</div>
     
                     <div class="card-body">
@@ -42,7 +42,7 @@
                     
                 </div>
 
-                <div class="card" style="margin-top: 30px;">
+                <div class="card" style="margin-top: 30px; background-color: rgb(52, 56, 61); color: rgb(255, 255, 255);">
                     @if(session()->has('del-error-msg'))
                         <div class="alert alert-danger">
                             {{ session()->get('del-error-msg') }}
@@ -55,8 +55,8 @@
                             <thead>
                               <tr>
                                 <th scope="col" width="10%">#</th>
-                                <th scope="col" width="80%">樂團名稱</th>
-                                <th scope="col" width="10%">處理</th>
+                                <th scope="col" width="70%">樂團名稱</th>
+                                <th scope="col" width="20%">動作</th>
                               </tr>
                             </thead>
                             <tbody>
