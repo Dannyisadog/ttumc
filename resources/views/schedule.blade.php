@@ -66,7 +66,7 @@
                                         @if ($user::getDateOrderCount($datetime) < 2 && $user::getWeekOrderCount() < 4 && strtotime($datetime) > strtotime(date('Y-m-d H:i:s')))
                                             {{Form::open(array('route'=>'createschedule'))}}
                                             {{Form::hidden('date', $datetime)}}
-                                            {{Form::submit("+", array('class'=>'btn btn-primary'))}}
+                                            {{Form::submit("預約", array('class'=>'btn btn-primary'))}}
                                             {{Form::close()}}
                                         @endif
                                     </td>
