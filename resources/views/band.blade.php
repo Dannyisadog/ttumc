@@ -56,7 +56,6 @@
                               <tr>
                                 <th scope="col" width="10%">#</th>
                                 <th scope="col" width="70%">樂團名稱</th>
-                                <th scope="col" width="20%">動作</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -65,13 +64,6 @@
                                     <tr>
                                         <th>{{$count++}}</th>
                                         <td>{{$band->name}}</td>
-                                        <td>
-                                            {{ Form::open(array('route'=>'deleteband', 'method'=>'delete'))}}
-                                            {{ Form::hidden('band_id', $band->id)}}
-                                            {{ Form::hidden('bandname', $band->name)}}
-                                            {{ Form::submit('移除')}}
-                                            {{ Form::close()}}
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
