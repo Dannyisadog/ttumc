@@ -21,7 +21,7 @@
                     <td>{{$band->name}}</td>
                     <td>{{$band->leader->name}}</td>
                     <td>
-                      @if (!$band_join_map[$band->id])
+                      @if (isset($band_join_map) && !$band_join_map[$band->id])
                         {{Form::open(array('method'=>'post','route' => 'joinBand'))}}
                         {{Form::hidden('user_id', Auth::user()->id)}}
                         {{Form::hidden('band_id', $band->id)}}

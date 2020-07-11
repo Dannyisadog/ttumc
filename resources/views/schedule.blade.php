@@ -119,6 +119,14 @@
 
 @section('js-down')
     <script>
+        function sleep(milliseconds) {
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds){
+                break;
+                }
+            }
+        }
         window.addEventListener("load", function (){
             $.ajaxSetup({
                 headers: {
@@ -139,8 +147,13 @@
                 dataType: 'json',
                 success: function(resp) {
                     if (resp.status === true && resp.can_multi_order === false) {
-                        swal.fire(resp.msg, "", "success");
-                        location.reload();
+                        swal({
+                            title: resp.msg,
+                            icon: "success",
+                        })
+                        .then(() => {
+                            location.reload();
+                        });
                     }
                     if (resp.status === true && resp.can_multi_order === true) {
                         let identities = resp.identities;

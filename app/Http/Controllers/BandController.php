@@ -68,6 +68,8 @@ class BandController extends Controller
         foreach ($bands as $band) {
             if (in_array($band->id, $joined_band_ids)) {
                 $band_join_map[$band->id] = true;
+            } else {
+                $band_join_map[$band->id] = false;
             }
         }
 
