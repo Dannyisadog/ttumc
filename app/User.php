@@ -68,42 +68,55 @@ class User extends Authenticatable
         }
         return false;
     }
+
     public function schedules()
     {
         return $this->hasMany('App\Schedule');
     }
 
-    public static function getDateOrderCount($date)
+    public function bandUserMappings()
     {
-        if (!Auth::check()) {
-            return 0;
-        }
-        $user = Auth::user();
+        return $this->hasMany('App\BandUserMapping', 'user_id', 'id');
+    }
 
+    public function getDateOrderCount($date)
+    {
         $date = date("Y-m-d", strtotime($date));
 
         $schedules = Schedule::where('starttime', 'like', '%' . $date . '%')
-            ->where('orderby', $user->id)
+            ->where('user_id', $this->id)
             ->get();
 
         return count($schedules);
     }
 
-    public static function getWeekOrderCount()
+    public function getWeekOrderCount()
     {
-        if (!Auth::check()) {
-            return 0;
-        }
-        $user = Auth::user();
-
         $week_first_day = date('Y-m-d', strtotime('monday this week'));
         $week_last_day = date('Y-m-d', strtotime('monday this week') + 86400 * 7);
 
         $schedules = Schedule::where('starttime', '>=', $week_first_day)
             ->where('starttime', '<=', $week_last_day)
-            ->where('orderby', $user->id)
+            ->where('user_id', $this->id)
             ->get();
 
         return count($schedules);
+    }
+
+    public function getBands()
+    {
+        $bands = [];
+
+        $bandUserMappings = [];
+
+        if ($this->bandUserMappings) {
+            $bandUserMappings = $this->bandUserMappings;
+        }
+
+        foreach ($bandUserMappings as $bandUserMapping) {
+            $bands[] = $bandUserMapping->band;
+        }
+
+        return $bands;
     }
 }
