@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Band as Band;
+use App\BandUserMapping;
 use App\Course as Course;
 use App\Feedback as Feedback;
 use App\Schedule as Schedule;
@@ -44,37 +45,22 @@ class Controller extends BaseController
         }
     }
 
-    public function showBand()
+    public function showUserBands()
     {
-        if (Auth::check()) {
-            $userid = Auth::id();
-            $bandlist = Band::where('belongto', $userid)->get();
-            return view('band', ['bandlist' => $bandlist]);
+        if (!Auth::check()) {
+            return redirect()->route('index');
         }
-        return redirect()->route('index');
+
+        $user = Auth::user();
+        $bandUserMappings = BandUserMapping::where('user_id', $user->id)->get();
+        $bands = [];
+        foreach ($bandUserMappings as $bandUserMapping) {
+            $bands[] = $bandUserMapping->band;
+        }
+
+        return view('band', ['bands' => $bands]);
     }
 
-    public function createBand(Request $request)
-    {
-        if (Auth::check()) {
-            $userid = Auth::id();
-            $bandname = $request->input('bandname');
-
-            $findband = Band::where('name', $bandname)->first();
-            $findname = User::where('name', $bandname)->first();
-            $findcourse = Course::where('title', $bandname)->first();
-
-            if ($findband === null && $findname === null && $findcourse === null) {
-                $band = new Band;
-                $band->belongto = $userid;
-                $band->name = $bandname;
-                $band->save();
-
-                return redirect()->route('band');
-            }
-            return redirect()->back()->with('error-msg', '團名重複或與使用者名稱重複');
-        }
-    }
     public function deleteBand(Request $request)
     {
         if (Auth::check()) {
@@ -107,15 +93,5 @@ class Controller extends BaseController
         $feedback->save();
 
         return redirect()->back()->with('success-msg', '成功送出');
-    }
-
-    public function showBandManagement()
-    {
-        if (Auth::check()) {
-            $allband = DB::select("SELECT a.name as bandname, b.name as username FROM band a, users b WHERE a.belongto = b.id");
-
-            return view("bandmanagement", ['allband' => $allband]);
-        }
-        return view("schedule");
     }
 }

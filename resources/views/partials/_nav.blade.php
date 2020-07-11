@@ -33,17 +33,18 @@
                     @endif
                 @else
                     @admin
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('bandmanagement') }}">{{ __('樂團列表') }}</a>
-                    </li>
-                    <li class="nav-item">
+
+                    {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('schedulemgm') }}">{{ __('練團表管理') }}</a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('usermanagement') }}">{{ __('使用者管理') }}</a>
                     </li>
                     @else
                     @endadmin
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('bandlist') }}">{{ __('樂團列表') }}</a>
+                    </li>
                     <li class="nav-item dropdown">
                     
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

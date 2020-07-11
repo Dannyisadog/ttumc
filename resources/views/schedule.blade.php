@@ -24,219 +24,183 @@
 @section('content')
     <?php
         $week = array("星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日");
-        $schedule_arr = array();
-        foreach($schedule as $item){
-            $time = strtotime($item->starttime);
-            $schedule_arr[$time] = $item->title;
-        }
-        $user_arr = array();
-        foreach($user as $item){
-            $user_arr[$item->id] = $item->name;
-        }
     ?>
     <div class="container" id="schedule-container">
         <table class="table table-dark table-bordered">
             <?php 
-                // echo "user each day: ";
-                // print_r($usereachdayCount); 
-                // echo "<br>";
-                // echo "use order count";
-                // print_r($userordercount->count);
-                // echo "<br>";
-                // echo "band order count";
-                // print_r($bandordercount);
-                // echo "<br>";
-                // echo "band each day: ";
-                // print_r($bandseachdaycanorder);
-                // echo "<br>";
-                // echo "each band each day count";
-                // print_r($bandeachdayCount);
                 $thisweek = strtotime("this week");
             ?>
             <thead>
               <tr>
                 <th scope="col" width="10%"></th>
-                @for ($i = 0; $i < 7; $i++)
+                @for ($i=0; $i<7; $i++)
                     <th scope="col">{{$week[$i]}} ({{date('m/d', $thisweek)}}) </th>
                     <?php $thisweek += 86400; ?>
                 @endfor
-                {{-- <th scope="col">星期一</th>
-                <th scope="col">星期二</th>
-                <th scope="col">星期三</th>
-                <th scope="col">星期四</th>
-                <th scope="col">星期五</th>
-                <th scope="col">星期六</th>
-                <th scope="col">星期日</th> --}}
               </tr>
             </thead>
             <tbody>
-                @for ($i = 9; $i <= 24; $i++)
-                    <?php
-                        $start = '';
-                        $end = '';
-                    ?>
-                    @if ($i-1 < 10)
-                        <?php
-                            $hour = $i-1;
-                            $start = "0$hour:00";
-                        ?>
-                    @else
-                        <?php
-                            $hour = $i-1;
-                            $start = "$hour:00";
-                        ?>
-                    @endif
+                @for ($i=8; $i<24; $i++)
                     <tr>
-                        <td>{{$start}}</td>
-                        <?php 
-                            $thisweek = strtotime("this week");
-                            $oneday = 86400;
-                        ?>
-                        @for ($j = 0; $j < 7; $j++)
-                            <?php
-                                $day = date('Y-m-d', $thisweek);
-                                $daytime = $day . " " . $start;
-                            ?>
+                    @for ($j=0; $j<8; $j++)
+                        @if ($j == 0)
                             <td>
-                                @guest
-                                    @if (array_key_exists(strtotime($daytime), $schedule_arr))
-                                        <?php 
-                                            $name = $schedule_arr[strtotime($daytime)];
-                                        ?>
-                                        {{$name}}
-                                    @else
-                                        
-                                    @endif
-                                @else
-                                    
-                                    @if (array_key_exists(strtotime($daytime), $schedule_arr)) 
-                                    {{-- 預約中 --}}
-                                        <?php $name = $schedule_arr[strtotime($daytime)]; ?>
-                                        @if ($name == Auth::user()->name || App\User::belongBand($name))
-                                            @if ( strtotime(date('Y-m-d H:00:00')) >= strtotime($daytime))
-                                                {{ $name }}
-                                            @else
-                                                {{ Form::open(array('method'=>'delete','route' => 'deleteschedule')) }}
-                                                {{ Form::hidden('date', "$daytime")}}
-                                                {{ Form::hidden('userid', Auth::user()->id)}}
-                                                {{ Form::hidden('title', $name)}}
-                                                {{ Form::submit("$name x", array('class'=>'delete-button btn btn-danger')) }}
-                                                {{ Form::close() }}
-                                            @endif
-                                        @else
-                                            {{ $name }}
-                                        @endif
-                                    @else
-                                    {{-- 尚未預約 --}}
-                                        @if (App\User::belongBandCount() > 0)
-                                            {{-- 有樂團的使用者 --}}
-                                            @if (($usercanorder || $bandcanorder))
-                                                @if ($usereachdayCount[$j] >= 2 && ($bandseachdaycanorder[$j] == 0 && $bandseachdaycanorder[$j]!= ''))
-                                                {{-- @if ($usereachdayCount[$j] >= 2 && ($bandeachdayCount[$j] >= 2)) --}}
-
-                                                @else
-                                                    @if ( strtotime(date('Y-m-d H:00:00')) >= strtotime($daytime))
-
-                                                    @else
-                                                        {{-- @if (($bandseachdaycanorder[$j] == 1) || $bandseachdaycanorder[$j] == '') --}}
-                                                        @if($usercanorder || $bandcanorder)
-                                                            <button type="button" class="add-button btn btn-primary"data-toggle="modal" data-target="#exampleModal{{strtotime($daytime)}}">+</button>
-                                                            <!-- Modal -->
-                                                            <div class="modal fade" id="exampleModal{{strtotime($daytime)}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                    <div class="modal-content">
-                                                                    <div class="modal-body">
-                                                                        <table class="table table-dark table-bordered">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th scope="col">選擇預約單位</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                @if ($usereachdayCount[$j] < 2)
-                                                                                    @if($userordercount->count < 4)
-                                                                                        <tr>
-                                                                                            <td>
-                                                                                                {{Form::open(array('route'=>'createschedule'))}}
-                                                                                                {{Form::hidden('date', $daytime)}}
-                                                                                                {{Form::hidden('title', auth()->user()->name)}}
-                                                                                                {{Form::submit(auth()->user()->name, array('class'=>'btn-block btn btn-primary'))}}
-                                                                                                {{Form::close()}}
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    @else
-                                                                                    @endif
-                                                                                @endif
-                                                                                @foreach ($bandlist as $item)
-                                                                                    @if ($bandordercount[$item->name] < 4)
-                                                                                        @if ($bandeachdayCount[$item->name][$j] < 2)
-                                                                                            <tr>
-                                                                                                <td>
-                                                                                                    {{Form::open(array('route'=>'createschedule'))}}
-                                                                                                    {{Form::hidden('date', "$daytime")}}
-                                                                                                    {{Form::hidden('title', $item->name)}}
-                                                                                                    {{Form::submit($item->name, array('class'=>'btn-block btn btn-primary'))}}
-                                                                                                    {{Form::close()}}
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        @else 
-                                                                                            
-                                                                                        @endif
-                                                                                    @endif
-                                                                                @endforeach
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-primary" data-dismiss="modal">關閉</button>
-                                                                    </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        {{-- @else
-                                                            @if ($usereachdayCount[$j] < 2)
-                                                                {{ Form::open(array('route' => 'createschedule')) }}
-                                                                {{ Form::hidden('date', "$daytime")}}
-                                                                {{ Form::hidden('title', auth()->user()->name)}}
-                                                                {{ Form::submit('+') }}
-                                                                {{ Form::close() }}
-                                                            @else
-                                                            @endif --}}
-                                                        @endif
-                                                    @endif
-                                                @endif
-                                            @endif
-                                        @else
-                                            {{-- 沒有樂團的使用者 --}}
-                                            @if ($usereachdayCount[$j] >= 2)
-                                                {{-- 今天無法預約     --}}
-                                            @else
-                                                @if ( strtotime(date('Y-m-d H:00:00')) >= strtotime($daytime))
-                                                @else
-                                                    @if ($usereachdayCount[$j] < 2)
-                                                        @if ($usercanorder)
-                                                            {{ Form::open(array('route' => 'createschedule')) }}
-                                                            {{ Form::hidden('date', "$daytime")}}
-                                                            {{ Form::hidden('title', auth()->user()->name)}}
-                                                            {{ Form::submit("+", array('class'=>'add-button btn btn-primary')) }}
-                                                            {{ Form::close() }}
-                                                        @else
-                                                        {{-- 預約已滿4小時 --}}
-                                                        @endif
-                                                    @else
-                                                    @endif
-                                                @endif
-                                            @endif
-                                        @endif
-                                    @endif
-                                
-                                @endguest
+                                <div class="table-item">
+                                    {{ sprintf("%02d:00", $i) }}
+                                </div>
                             </td>
-                            <?php $thisweek += $oneday; ?>
-                        @endfor
+                        @else
+                            <?php $datetime = date("Y-m-d H:i:s", strtotime('monday this week') + ($i)*3600 + ($j-1)*86400); ?>
+                            @if (Auth::check())
+                                @if (isset($schedule_map[$datetime]))
+                                    <td>
+                                        <div class="table-item">
+                                        @if (in_array(Auth::user()->id, $schedule_map[$datetime]["user_ids"]) && strtotime($datetime) > strtotime(date('Y-m-d H:i:s')))
+                                            {{Form::open(array('method'=>'delete','route' => 'deleteschedule'))}}
+                                            {{Form::hidden('schedule_id', $schedule_map[$datetime]["schedule_id"])}}
+                                            {{Form::submit($schedule_map[$datetime]["order_title"] . "x", array('class'=>'btn btn-danger'))}}
+                                            {{Form::close()}}
+                                        @else
+                                            {{$schedule_map[$datetime]["order_title"]}}
+                                        @endif
+                                        </div>
+                                    </td>
+                                @else
+                                    <td>
+                                        <div class="table-item">
+                                        @if ($week_can_order && $date_can_order_map[date('Y-m-d', strtotime($datetime))] && strtotime($datetime) > strtotime(date('Y-m-d H:i:s')))
+                                            <button class="btn btn-primary btn-order" onclick="order_check('{{$datetime}}')">+</button>
+                                            {{-- <button type="button" class="add-button btn btn-primary"data-toggle="modal" data-target="#exampleModal1594512000">+</button> --}}
+                                        @endif
+                                        </div>
+                                    </td>
+                                @endif
+                            @else
+                                @if (isset($schedule_map[$datetime]))
+                                    <td>
+                                        <div class="table-item">
+                                        {{$schedule_map[$datetime]["order_title"]}}
+                                        </div>
+                                    </td>
+                                @else
+                                    <td></td>
+                                @endif
+                            @endif
+                        @endif
+                    @endfor
                     </tr>
                 @endfor
             </tbody>
-          </table>
+        </table>
+        <!-- Modal -->
+        <div class="modal fade" id="can-multi-order-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content" style="background-color: #212529;">
+                    <div class="modal-body">
+                        <table class="table table-dark table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">選擇預約身份</th>
+                                </tr>
+                            </thead>
+                            <tbody class="order-identities-body">     
+                                                                                                                                                                                               <tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+@endsection
+
+@section('js-down')
+    <script>
+        window.addEventListener("load", function (){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('#can-multi-order-modal').on('hidden.bs.modal', function (e) {
+                $('.order-identities-body').empty();
+            })
+        });
+        function order_check(datetime) {
+            $.ajax({
+                url: './schedule/order_check',
+                method: 'post',
+                data: {
+                    "datetime": datetime,
+                },
+                dataType: 'json',
+                success: function(resp) {
+                    if (resp.status === true && resp.can_multi_order === false) {
+                        swal.fire(resp.msg, "", "success");
+                        location.reload();
+                    }
+                    if (resp.status === true && resp.can_multi_order === true) {
+                        let identities = resp.identities;
+                        appendIdentitiesToModal(identities, datetime);
+                        $('#can-multi-order-modal').modal('show');
+                    }
+                },
+                error: function (xhr) {
+                    alert("error");
+                }
+            });
+        }
+
+        function order(identity, datetime) {
+            $.ajax({
+                url: './schedule/order',
+                method: 'post',
+                data: {
+                    "identity": identity,
+                    "datetime": datetime
+                },
+                dataType: 'json',
+                success: function (resp) {
+                    swal.fire("預約成功", "", "success");
+                    location.reload();
+                },
+                error: function (xhr) {
+                    swal.fire("預約失敗", "", "error");
+                }
+            });
+        }
+
+        function appendIdentitiesToModal(identities, datetime) {
+            var modalBody = document.querySelector(".order-identities-body");
+
+            identities.forEach(identity => {
+                var tr = document.createElement("tr");
+
+                var td = document.createElement("td");
+
+                var button = document.createElement("button");
+                button.classList.add("btn");
+                button.classList.add("btn-primary");
+                button.classList.add("btn-block");
+                button.classList.add("btn-order");
+
+                button.addEventListener("click", function () {
+                    return order(identity, datetime);
+                });
+
+                var buttonText = document.createTextNode(identity.order_title);
+
+                button.appendChild(buttonText);
+
+                td.appendChild(button);
+
+                tr.appendChild(td);
+
+                modalBody.appendChild(tr);
+            });
+        }
+    </script>
 @endsection
