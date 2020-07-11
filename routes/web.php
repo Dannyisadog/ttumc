@@ -21,13 +21,14 @@ Route::get('/home', 'ScheduleController@showSchedule')->name('home');
 
 //Schedule Route
 Route::get('/schedule', 'ScheduleController@showSchedule')->name('schedule');
-Route::post('/schedule', 'ScheduleController@createSchedule')->name('createschedule');
 Route::delete('/schedule', 'ScheduleController@deleteSchedule')->name('deleteschedule');
 Route::patch('/schedule', 'ScheduleController@updateSchedule');
-Route::get('/schedulemgm', 'ScheduleController@showScheduleMgm')->name('schedulemgm');
+// Route::get('/schedulemgm', 'ScheduleController@showScheduleMgm')->name('schedulemgm');
+Route::post('/schedule/order_check', 'ScheduleController@order_check');
+Route::post('/schedule/order', 'ScheduleController@order');
 
 //course Route
-Route::post('/schedulemgm', 'ScheduleController@createCourse')->name('createCourse');
+// Route::post('/schedulemgm', 'ScheduleController@createCourse')->name('createCourse');
 Route::delete('/schedulemgm', 'ScheduleController@deleteCourse')->name('deleteCourse');
 Route::put('/pauseCourse', 'ScheduleController@pauseCourse')->name('pauseCourse');
 Route::put('/resumeCourse', 'ScheduleController@resumeCourse')->name('resumeCourse');
@@ -37,10 +38,11 @@ Route::get('/usermanagement', 'Controller@showUserManagement')->name('usermanage
 Route::post('/usermanagement', 'Controller@changeUserAdmin')->name('changeuseradmin');
 
 //band Route
-Route::get('/band', 'Controller@showBand')->name('band');
-Route::post('/band', 'Controller@createBand')->name('createband');
+Route::get('/band', 'Controller@showUserBands')->name('band');
+Route::post('/band', 'BandController@createBand')->name('createband');
 Route::delete('/band', 'Controller@deleteBand')->name('deleteband');
-Route::get('bandmanagement', 'Controller@showBandManagement')->name('bandmanagement');
+Route::get('bandlist', 'BandController@showBand')->name('bandlist');
+Route::post('/band/join', 'BandController@joinBand')->name('joinBand');
 
 //feedback Route
 Route::get('/feedback', 'Controller@showFeedback')->name('feedback');

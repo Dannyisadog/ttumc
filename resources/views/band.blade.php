@@ -61,14 +61,14 @@
                             </thead>
                             <tbody>
                                 <?php $count = 1; ?>
-                                @foreach ($bandlist as $item)
+                                @foreach ($bands as $band)
                                     <tr>
                                         <th>{{$count++}}</th>
-                                        <td>{{$item->name}}</td>
+                                        <td>{{$band->name}}</td>
                                         <td>
                                             {{ Form::open(array('route'=>'deleteband', 'method'=>'delete'))}}
-                                            {{ Form::hidden('belongid', $item->belongto)}}
-                                            {{ Form::hidden('bandname', $item->name)}}
+                                            {{ Form::hidden('band_id', $band->id)}}
+                                            {{ Form::hidden('bandname', $band->name)}}
                                             {{ Form::submit('移除')}}
                                             {{ Form::close()}}
                                         </td>
