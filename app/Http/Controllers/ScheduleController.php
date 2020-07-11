@@ -72,7 +72,7 @@ class ScheduleController extends Controller
         $result = [
             'status' => true,
             'can_multi_order' => true,
-            'msg' => ''
+            'msg' => '預約成功'
         ];
 
         try {
@@ -85,7 +85,6 @@ class ScheduleController extends Controller
 
             if (count($bandUserMappings) == 0 && $this->user_order($datetime)) {
                 $result['can_multi_order'] = false;
-                $result['msg'] = '預約成功';
             } else {
                 $result['msg'] = '請選擇預約身份';
                 $result['identities'] = $this->getOrderIdentities($datetime);
@@ -104,7 +103,7 @@ class ScheduleController extends Controller
 
         $result = [
             'status' => true,
-            'msg' => ''
+            'msg' => '預約成功'
         ];
 
         try {

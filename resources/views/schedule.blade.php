@@ -177,8 +177,14 @@
                 },
                 dataType: 'json',
                 success: function (resp) {
-                    swal.fire("預約成功", "", "success");
-                    location.reload();
+                    console.log(resp);
+                    swal({
+                        title: resp.msg,
+                        icon: "success",
+                    })
+                    .then(() => {
+                        location.reload();
+                    });
                 },
                 error: function (xhr) {
                     swal.fire("預約失敗", "", "error");
