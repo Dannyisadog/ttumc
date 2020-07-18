@@ -5,10 +5,13 @@
 @import 'variables';
 
 // Bootstrap
-@import './layouts.scss';
 @import '~bootstrap/scss/bootstrap';
 @import './schedule.scss';
+@import './layouts.scss';
 
+main {
+    margin-top: 75px;
+}
 
 body, .table-dark {
     background-color: $dark-grey;

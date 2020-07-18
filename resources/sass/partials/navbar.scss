@@ -5,11 +5,13 @@
     margin: 0 auto;
     background-color: #2e3135;
     border-radius: 10px;
-    position: relative;
+    position: fixed;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
+    left: 0px;
+    right: 0px;
 
     .navbar-brand {
         display: inline-block;
