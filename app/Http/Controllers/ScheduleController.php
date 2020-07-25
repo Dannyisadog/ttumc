@@ -14,8 +14,19 @@ use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
-    public function showSchedule()
+    public function showSchedule(Request $request)
     {
+        $selectors = [1, 2, 3, 4, 5, 6, 7];
+        $selector_weekday_map = [
+            1 => '星期一',
+            2 => '星期二',
+            3 => '星期三',
+            4 => '星期四',
+            5 => '星期五',
+            6 => '星期六',
+            7 => '星期日'
+        ];
+
         if (Auth::check()) {
             $user = Auth::user();
             $schedule_data['user'] = $user;
@@ -27,6 +38,14 @@ class ScheduleController extends Controller
             $schedule_data['date_can_order_map'] = $date_can_order_map;
         }
 
+        $selector_mw = 1;
+
+        if ($request->input('selector') && in_array($request->input('selector'), $selectors)) {
+            $selector_mw = $request->input('selector');
+        }
+
+        $schedule_data['selector'] = $selector_mw;
+        $schedule_data['selector_weekday_map'] = $selector_weekday_map;
 
         $schedules = $this->getThisWeekSchedules();
 
