@@ -11024,6 +11024,10 @@ a.text-dark:focus {
     vertical-align: middle;
     font-size: 20px;
   }
+
+  #schedule-container-mw #order-table-mw .order-item-mw {
+    font-size: 20px;
+  }
 }
 
 .navbar {

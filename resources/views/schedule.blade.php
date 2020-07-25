@@ -131,7 +131,7 @@
                                <?php $datetime = date("Y-m-d H:i:s", strtotime('monday this week') + ($i)*3600 + ($selector-1)*86400); ?>
                                 @if (Auth::check())
                                     @if (isset($schedule_map[$datetime]))
-                                        <td height="60px">
+                                        <td height="60px" class="order-item-mw">
                                             <div class="table-item">
                                             @if (in_array(Auth::user()->id, $schedule_map[$datetime]["user_ids"]) && strtotime($datetime) > strtotime(date('Y-m-d H:i:s')))
                                                 {{Form::open(array('method'=>'delete','route' => 'deleteschedule'))}}
@@ -144,8 +144,8 @@
                                             </div>
                                         </td>
                                     @else
-                                        <td height="60px">
-                                            <div class="table-item">
+                                        <td height="60px" class="order-item-mw">
+                                            <div class="order-item">
                                             @if ($week_can_order && $date_can_order_map[date('Y-m-d', strtotime($datetime))] && strtotime($datetime) > strtotime(date('Y-m-d H:i:s')))
                                                 <button class="btn btn-primary btn-order" onclick="order_check('{{$datetime}}')">+</button>
                                             @endif
@@ -154,7 +154,7 @@
                                     @endif
                                 @else
                                     @if (isset($schedule_map[$datetime]))
-                                        <td height="60px">
+                                        <td height="60px" class="order-item-mw">
                                             <div class="table-item">
                                             {{$schedule_map[$datetime]["order_title"]}}
                                             </div>
