@@ -8,7 +8,7 @@
             <thead>
               <tr>
                 <th scope="col" width="10%">#</th>
-                <th scope="col" width="20%">名稱</th>
+                <th scope="col" width="20%">使用者</th>
                 <th scope="col" width="30%">Email</th>
                 <th scope="col" width="30%">上次登入時間</th>
                 <th scope="col" width="10%">管理員</th>
