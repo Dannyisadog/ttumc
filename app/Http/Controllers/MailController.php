@@ -30,6 +30,8 @@ class MailController extends Controller
 
         if (Mail::failures()) {
             print_r(Mail::failures());
+        } else {
+            echo "成功";
         }
     }
 }
