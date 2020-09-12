@@ -8,6 +8,7 @@ class MailController extends Controller
 {
     public function sendTestMail()
     {
+        exit;
         Mail::send('emails.test', ['key' => 'value'], function ($message) {
             $message->to('dannyisadog10@gmail.com', 'Danny')->subject('test email!');
         });
