@@ -25,9 +25,8 @@ class MailController extends Controller
 
         $mail = new Mail;
 
-        $mail::send('emails.test', $data, function ($message) use ($from, $to) {
-            $message->from($from['email'], $from['name']);
-            $message->to($to['email'], $to['name'])->subject($from['subject']);
+        $mail::send('emails.test', ['key' => 'value'], function ($message) {
+            $message->to('dannyisadog10@gmail.com', 'Danny')->subject('test email!');
         });
 
         if ($mail::failures()) {
