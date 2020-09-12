@@ -23,13 +23,15 @@ class MailController extends Controller
             'subject' => "test mail"
         ];
 
-        Mail::send('emails.test', $data, function ($message) use ($from, $to) {
+        $mail = new Mail;
+
+        $mail::send('emails.test', $data, function ($message) use ($from, $to) {
             $message->from($from['email'], $from['name']);
             $message->to($to['email'], $to['name'])->subject($from['subject']);
         });
 
-        if (Mail::failures()) {
-            print_r(Mail::failures());
+        if ($mail::failures()) {
+            print_r($mail::failures());
         } else {
             echo "成功";
         }
