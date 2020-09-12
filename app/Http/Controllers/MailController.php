@@ -27,5 +27,9 @@ class MailController extends Controller
             $message->from($from['email'], $from['name']);
             $message->to($to['email'], $to['name'])->subject($from['subject']);
         });
+
+        if (Mail::failures()) {
+            print_r(Mail::failures());
+        }
     }
 }
