@@ -9,7 +9,7 @@ class MailController extends Controller
     public function sendTestMail()
     {
         $from = [
-            'email' => 'ttumc@ttu-mc.test',
+            'email' => 'ttumc@ttu-mc.dannyisadog.com',
             'name' => 'ttumc',
             'subject' => 'test mail'
         ];
