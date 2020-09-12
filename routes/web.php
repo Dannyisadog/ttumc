@@ -1,4 +1,7 @@
 <?php
+
+include("testing/mail.php");
+
 Route::get('/', 'ScheduleController@showSchedule')->name('index');
 
 // Authentication Routes...
