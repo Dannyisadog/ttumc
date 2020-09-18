@@ -8,9 +8,9 @@ class Schedule extends Model
 {
     public $timestamps = false;
     protected $table = 'schedule';
-    protected $fillable = ['title', 'user_id', 'band_id', 'orderby', 'starttime'];
+    protected $fillable = ['title', 'user_id', 'band_id', 'course_id', 'orderby', 'starttime'];
 
-    public static $order_types = ['user', 'band'];
+    public static $order_types = ['user', 'band', 'admin'];
 
     public function user()
     {
@@ -20,5 +20,10 @@ class Schedule extends Model
     public function band()
     {
         return $this->belongsTo('App\Band', 'band_id', 'id');
+    }
+
+    public function course()
+    {
+        return $this->belongsTo('App\Course', 'course_id', 'id');
     }
 }

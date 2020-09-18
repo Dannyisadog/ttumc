@@ -23,17 +23,6 @@
 @endsection
 
 @section('content')
-    <?php
-        $course_arr = array();
-        foreach($course as $item){
-            $time = $item->day . "-" . $item->starttime;
-            $course_arr[$time] = $item->title;
-        }
-        $user_arr = array();
-        foreach($user as $item){
-            $user_arr[$item->id] = $item->name;
-        }
-    ?>
     <div class="container">
         <div style="display:flex">
             <div style="margin-right:10px;">
@@ -90,18 +79,19 @@
                                 ?>
                                 <td>
                                     @guest
-                                        @if (array_key_exists(strtotime($daytime), $schedule_arr))
+                                        @if (array_key_exists(strtotime($daytime), $courses))
                                             <?php 
-                                                $id = $schedule_arr[strtotime($daytime)]; 
+                                                $id = $courses[strtotime($daytime)]; 
                                                 $name = $user_arr[$id];
                                             ?>
                                             {{$name}}
                                         @endif
                                     @else
-                                        @if (array_key_exists($daytime, $course_arr))
+                                        @if (array_key_exists($daytime, $courses))
+                                            <?php $course = $courses[$daytime]; ?>
                                             {{ Form::open(array('method'=>'delete','route' => 'deleteCourse')) }}
                                             {{ Form::hidden('time', "$daytime")}}
-                                            {{ Form::submit("$course_arr[$daytime] x") }}
+                                            {{ Form::submit("$course->title x") }}
                                             {{ Form::close() }}
                                         @else
                                             {{ Form::open(array('route' => 'createCourse')) }}

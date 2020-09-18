@@ -2,12 +2,12 @@
 
 namespace App;
 
+use App\Notifications\ResetPasswordNotification;
+use App\Schedule;
 use Auth;
 use DB;
-use App\Schedule;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -42,14 +42,16 @@ class User extends Authenticatable
 
     public static function isAdmin()
     {
-        $userid = Auth::id();
-        $admin = DB::select("SELECT admin FROM users WHERE id = '$userid'");
-
-        if ($admin[0]->admin == 'Y') {
-            return true;
-        } else {
+        if (!Auth::check()) {
             return false;
         }
+
+        $user = Auth::user();
+
+        if ($user->admin == 'Y') {
+            return true;
+        }
+        return false;
     }
     public static function belongBandCount()
     {
