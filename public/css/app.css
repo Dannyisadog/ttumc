@@ -11030,6 +11030,22 @@ a.text-dark:focus {
   }
 }
 
+.container .band-index,
+.container .band-index-title,
+.container .band-action,
+.container .band-action-title {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.container .band-name,
+.container .band-name-title,
+.container .band-lead,
+.container .band-lead-title {
+  text-align: left;
+  vertical-align: middle;
+}
+
 .navbar {
   width: 96%;
   top: 10px;
