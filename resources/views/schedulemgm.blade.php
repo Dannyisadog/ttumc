@@ -24,7 +24,7 @@
 
 @section('content')
     <div class="container">
-        <div style="display:flex">
+        <div style="display:flex; align-items:center">
             <div style="margin-right:10px;">
                 {{ Form::open(array('method' => 'put' ,'route' => 'pauseCourse')) }}
                 {{ Form::submit("暫停社課")}}
@@ -35,8 +35,11 @@
                 {{ Form::submit("恢復社課")}}
                 {{ Form::close() }}
             </div>
+            <div style="color: white; margin-left: 10px">
+                社課狀態：<?= $course_status ?>
+            </div>
         </div>
-        <div class="container" id="schedule-container" style="margin-top:10px;">
+        <div  id="schedule-container" style="margin-top:10px;">
             <table class="table table-dark table-bordered">
                 <thead>
                 <tr>

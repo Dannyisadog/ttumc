@@ -210,6 +210,17 @@ class ScheduleController extends BaseController
         if (!User::isAdmin()) {
             return redirect()->route('schedule');
         }
+
+        $course_status = Redis::get(Course::STATUS_KEY);
+
+        $course_status_msg = "";
+
+        if ($course_status) {
+            $course_status_msg = "正常";
+        } else {
+            $course_status_msg = "暫停";
+        }
+
         $courses = Course::all();
 
         $courses_date_key = [];
@@ -221,6 +232,7 @@ class ScheduleController extends BaseController
 
         $data = [
             'courses' => $courses_date_key,
+            'course_status' => $course_status_msg
         ];
 
         return view('schedulemgm', $data);
