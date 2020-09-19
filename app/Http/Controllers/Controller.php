@@ -79,17 +79,25 @@ class Controller extends BaseController
 
     public function showFeedback()
     {
-        return view('feedback');
+        $feedbacks = Feedback::all();
+
+        return view('feedback', ['feedbacks' => $feedbacks]);
     }
     public function createfeedback(Request $request)
     {
-        $newfeedback = $request->input('feedback');
-        $userid = Auth::id();
-        $feedback = new Feedback;
-        $feedback->content = $newfeedback;
-        $feedback->userid = $userid;
-        $feedback->save();
+        $feedback = $request->input('feedback');
 
-        return redirect()->back()->with('success-msg', '成功送出');
+        if (!Auth::check()) {
+            return redirect()->back()->with('error-msg', '尚未登入');    
+        }
+
+        $user = Auth::user();
+
+        Feedback::create([
+            "userid" => $user->id,
+            "content" => $feedback
+        ]);
+
+        return redirect()->route('feedback');
     }
 }
