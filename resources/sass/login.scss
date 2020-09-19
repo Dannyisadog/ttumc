@@ -1,0 +1,22 @@
+.login-content {
+    width: 300px;
+    margin: 0 auto;
+
+    .account-row,
+    .password-row,
+    .login-button-row,
+    .login-footer-row {
+        margin-top: 20px;
+    }
+
+    .login-footer-row {
+        display: flex;
+        .remember-wrapper,
+        .password-forget-wrapper {
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
