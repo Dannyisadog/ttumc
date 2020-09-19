@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name=”apple-mobile-web-app-capable” content=”yes”>
 
-    <meta property="og:title" content="大同大學熱音社?"/>
+    <meta property="og:title" content="大同大學熱音社"/>
     <meta property="og:description" content="大同大學熱音社 練團表"/>
     <meta property="og:type" content="article"/>
     <meta property="og:image" content="{{ url('images/logo/logo_white.png') }}"/>
