@@ -10940,14 +10940,6 @@ a.text-dark:focus {
   background-color: #3490dc;
 }
 
-.container .table-item {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 @media only screen and (min-width: 768px) {
   #schedule-container-mw {
     display: none !important;
@@ -11090,6 +11082,22 @@ a.text-dark:focus {
 
 .navbar #navbarSupportedContent {
   text-align: center;
+}
+
+.table-item {
+  vertical-align: middle !important;
+}
+
+.table-item .center {
+  text-align: center !important;
+}
+
+.table-item .left {
+  text-align: left !important;
+}
+
+.table-item .right {
+  text-align: right !important;
 }
 
 main {
