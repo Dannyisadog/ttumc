@@ -1,12 +1,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.7">
+    <meta name="description" content="大同大學熱音社 練團表">
     
     <title>TTUMC - @yield('title')</title>
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name=”apple-mobile-web-app-capable” content=”yes”>
+
+    <meta property="og:title" content="大同大學熱音社?"/>
+    <meta property="og:description" content="大同大學熱音社 練團表"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="{{ url('images/logo/logo_white.png') }}"/>
     
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
