@@ -6,13 +6,15 @@ use App\Band as Band;
 use App\Course as Course;
 use App\Schedule as Schedule;
 use App\User as User;
+use App\Week as Week;
 use Auth;
 use Exception;
-use DB;
-use SweetAlert;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
+use SweetAlert;
+use Illuminate\Routing\Controller as BaseController;
 
-class ScheduleController extends Controller
+class ScheduleController extends BaseController
 {
     public function showSchedule(Request $request)
     {
@@ -24,7 +26,7 @@ class ScheduleController extends Controller
             4 => '星期四',
             5 => '星期五',
             6 => '星期六',
-            7 => '星期日'
+            7 => '星期日',
         ];
 
         if (Auth::check()) {
@@ -63,6 +65,10 @@ class ScheduleController extends Controller
                 $user = User::find($schedule->user_id);
                 $schedule_belongs_to[] = $user->id;
                 $order_title = $user->name;
+            } elseif ($orderby == 'admin') {
+                $course = Course::find($schedule->course_id);
+                $schedule_belongs_to[] = $course->id;
+                $order_title = $course->title;
             } elseif ($orderby == 'band') {
                 $band = Band::find($schedule->band_id);
                 $order_title = $band->name;
@@ -77,7 +83,7 @@ class ScheduleController extends Controller
             $schedule_map[$key] = [
                 "user_ids" => $schedule_belongs_to,
                 "order_title" => $order_title,
-                "schedule_id" => $schedule->id
+                "schedule_id" => $schedule->id,
             ];
         }
 
@@ -91,7 +97,7 @@ class ScheduleController extends Controller
         $result = [
             'status' => true,
             'can_multi_order' => true,
-            'msg' => '預約成功'
+            'msg' => '預約成功',
         ];
 
         try {
@@ -122,7 +128,7 @@ class ScheduleController extends Controller
 
         $result = [
             'status' => true,
-            'msg' => '預約成功'
+            'msg' => '預約成功',
         ];
 
         try {
@@ -200,9 +206,24 @@ class ScheduleController extends Controller
         if (!Auth::check()) {
             return redirect()->route('schedule');
         }
-        $course = DB::SELECT('SELECT a.name, b.title, DATE_FORMAT(b.starttime, "%H:%i") as starttime , b.day FROM users a, schedule_course b WHERE a.id = b.orderby AND b.valid="Y"');
-        $user = User::all();
-        return view('schedulemgm', ['course' => $course, 'user' => $user]);
+
+        if (!User::isAdmin()) {
+            return redirect()->route('schedule');
+        }
+        $courses = Course::all();
+
+        $courses_date_key = [];
+
+        foreach ($courses as $course) {
+            $date_key = $course->day . "-" . date("H:i", strtotime($course->starttime));
+            $courses_date_key[$date_key] = $course;
+        }
+
+        $data = [
+            'courses' => $courses_date_key,
+        ];
+
+        return view('schedulemgm', $data);
     }
 
     public function createCourse(Request $request)
@@ -210,36 +231,47 @@ class ScheduleController extends Controller
         if (!Auth::check()) {
             return redirect()->route('schedule');
         }
-        $user = Auth::id();
+        if (!User::isAdmin()) {
+            SweetAlert::error('權限不足');
+            return redirect()->route('schedule');
+        }
+        $user = Auth::user();
         $title = $request->input('course');
         $time = $request->input('time');
-        $starttime = explode("-", $time)[1];
         $day = explode("-", $time)[0];
+        $starttime = explode("-", $time)[1] . ":00";
 
-        $course = new Course;
-        $course->orderby = $user;
-        $course->title = $title;
-        $course->starttime = $starttime;
-        $course->day = $day;
+        $course = Course::where('day', $day)
+            ->where('starttime', $starttime)
+            ->first();
 
-        $course->save();
+        if ($course) {
+            SweetAlert::error("課程已存在");
+            return redirect()->route('schedulemgm');
+        }
+
+        $course = Course::create([
+            'title' => $title,
+            'day' => $day,
+            'starttime' => $starttime,
+            'created_by' => $user->id,
+        ]);
 
         $thisweek = strtotime("this week");
         $date = date('Y-m-d', $thisweek + 86400 * ($day - 1));
         $daytime = $date . " " . $starttime;
 
-        $schedule = new Schedule;
-
         $schedulefind = Schedule::where('starttime', $daytime)->first();
         if ($schedulefind !== null) {
             $delete = Schedule::where('starttime', $daytime)->delete();
         }
-        $schedule->orderby = $user;
-        $schedule->title = $title;
 
-        $schedule->starttime = $daytime;
-
-        $schedule->save();
+        Schedule::create([
+            'title' => $title,
+            'orderby' => 'admin',
+            'course_id' => $course->id,
+            'starttime' => $daytime,
+        ]);
 
         return redirect()->route('schedulemgm');
     }
@@ -269,18 +301,10 @@ class ScheduleController extends Controller
         if (!Auth::check()) {
             return redirect()->route('schedule');
         }
-        $course = Course::all();
 
-        foreach ($course as $item) {
-            $day = $item->day;
-            $starttime = $item->starttime;
+        Redis::set(Course::STATUS_KEY, 0);
 
-            $thisweek = strtotime("this week");
-            $date = date('Y-m-d', $thisweek + 86400 * ($day - 1));
-            $daytime = $date . " " . $starttime;
-
-            $delete = Schedule::where('starttime', $daytime)->delete();
-        }
+        Course::removeCourseThisWeek();
 
         return redirect()->route('schedule');
     }
@@ -290,24 +314,9 @@ class ScheduleController extends Controller
             return redirect()->route('schedule');
         }
 
-        $course = Course::all();
+        Redis::set(Course::STATUS_KEY, 1);
 
-        foreach ($course as $item) {
-            $day = $item->day;
-            $starttime = $item->starttime;
-
-            $thisweek = strtotime("this week");
-            $date = date('Y-m-d', $thisweek + 86400 * ($day - 1));
-            $daytime = $date . " " . $starttime;
-
-            $schedule = new Schedule;
-
-            $schedule->orderby = Auth::id();
-            $schedule->title = $item->title;
-            $schedule->starttime = $daytime;
-
-            $schedule->save();
-        }
+        Course::createCourseThisWeek();
 
         return redirect()->route('schedule');
     }
@@ -326,7 +335,7 @@ class ScheduleController extends Controller
             "title" => $user->name,
             'orderby' => 'user',
             'user_id' => $user->id,
-            'starttime' => $datetime
+            'starttime' => $datetime,
         ];
 
         Schedule::create($order_data);
@@ -364,7 +373,7 @@ class ScheduleController extends Controller
             "title" => $band->name,
             'orderby' => 'band',
             'band_id' => $band->id,
-            'starttime' => $datetime
+            'starttime' => $datetime,
         ];
 
         Schedule::create($order_data);
@@ -374,12 +383,12 @@ class ScheduleController extends Controller
 
     private function getThisWeekSchedules()
     {
-        $week_first_day = date('Y-m-d', strtotime('monday this week'));
-        $week_last_day = date('Y-m-d', strtotime('monday this week') + 86400 * 7);
+        list($start, $end) = Week::getWeekRange();
+
         return Schedule::where('valid', 'Y')
-            ->where('starttime', '>=', $week_first_day)
-            ->where('starttime', '<', $week_last_day)
+            ->whereBetween('starttime', [$start, $end])
             ->get();
+           
     }
 
     private function getThisWeekDates()
@@ -483,7 +492,7 @@ class ScheduleController extends Controller
             $identities[] = [
                 'order_type' => 'user',
                 'user_id' => $user->id,
-                'order_title' => $user->name
+                'order_title' => $user->name,
             ];
         }
 
@@ -492,7 +501,7 @@ class ScheduleController extends Controller
                 $identities[] = [
                     'order_type' => 'band',
                     'band_id' => $band->id,
-                    'order_title' => $band->name
+                    'order_title' => $band->name,
                 ];
             }
         }

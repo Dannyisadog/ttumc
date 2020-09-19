@@ -34,9 +34,9 @@
                 @else
                     @admin
 
-                    {{-- <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('schedulemgm') }}">{{ __('練團表管理') }}</a>
-                    </li> --}}
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('usermanagement') }}">{{ __('使用者管理') }}</a>
                     </li>

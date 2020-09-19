@@ -26,12 +26,12 @@ Route::get('/home', 'ScheduleController@showSchedule')->name('home');
 Route::get('/schedule', 'ScheduleController@showSchedule')->name('schedule');
 Route::delete('/schedule', 'ScheduleController@deleteSchedule')->name('deleteschedule');
 Route::patch('/schedule', 'ScheduleController@updateSchedule');
-// Route::get('/schedulemgm', 'ScheduleController@showScheduleMgm')->name('schedulemgm');
+Route::get('/schedulemgm', 'ScheduleController@showScheduleMgm')->name('schedulemgm');
 Route::post('/schedule/order_check', 'ScheduleController@order_check');
 Route::post('/schedule/order', 'ScheduleController@order');
 
 //course Route
-// Route::post('/schedulemgm', 'ScheduleController@createCourse')->name('createCourse');
+Route::post('/schedulemgm', 'ScheduleController@createCourse')->name('createCourse');
 Route::delete('/schedulemgm', 'ScheduleController@deleteCourse')->name('deleteCourse');
 Route::put('/pauseCourse', 'ScheduleController@pauseCourse')->name('pauseCourse');
 Route::put('/resumeCourse', 'ScheduleController@resumeCourse')->name('resumeCourse');
