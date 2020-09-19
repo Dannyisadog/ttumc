@@ -12,7 +12,7 @@
     <meta property="og:title" content="大同大學熱音社"/>
     <meta property="og:description" content="大同大學熱音社 練團表"/>
     <meta property="og:type" content="article"/>
-    <meta property="og:image" content="{{ url('images/logo/logo_white.png') }}"/>
+    <meta property="og:image" content="{{ url('images/logo/logo_black.png') }}"/>
     
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
