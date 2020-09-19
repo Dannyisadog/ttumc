@@ -6,8 +6,9 @@
 <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('建議與問題') }}</div>
+                @if (Auth::check())
+                <div class="card" style="background-color: #34383d; color: #fff;">
+                    <div class="card-header">{{ __('許願池') }}</div>
     
                     <div class="card-body">
                         @if(session()->has('success-msg'))
@@ -24,11 +25,25 @@
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">
-                                    {{ __('送出') }}
-                                </button>
+                                {{ __('許願') }}
+                            </button>
                         </form>
                     </div>
                 </div>
+                @endif
+
+                @foreach ($feedbacks as $feedback)
+                <div class="card" style="background-color: #34383d; color: #fff; margin-top :20px">
+                    <div class="card-header">{{ __('願望') }}</div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-12" style="font-size: 20px">
+                                {{$feedback->content}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
             </div>
         </div>
     </div>

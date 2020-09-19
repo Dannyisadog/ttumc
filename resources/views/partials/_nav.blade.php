@@ -15,10 +15,9 @@
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
-                <!-- Authentication Links -->
-                {{-- <li class="nav-item">
-                    <a class="nav-link" href="{{ route('feedback') }}">{{ __('建議與問題') }}</a>
-                </li> --}}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('feedback') }}">{{ __('許願池') }}</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('schedule') }}">{{ __('練團表') }}</a>
                 </li>
