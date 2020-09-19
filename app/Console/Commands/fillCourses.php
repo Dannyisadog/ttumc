@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Course;
 use App\Schedule;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Redis;
 
 class fillCourses extends Command
 {
@@ -39,16 +40,13 @@ class fillCourses extends Command
      */
     public function handle()
     {
-        $courses = Course::all();
+        $redis_status = Redis::get(Course::STATUS_KEY);
 
-        $week_first_day = date('Y-m-d', strtotime('monday this week'));
-        foreach ($courses as $course) {
-            Schedule::create([
-                'title' => $course->title,
-                'orderby' => 'admin',
-                'course_id' => $course->id,
-                'starttime' => date('Y-m-d', strtotime($week_first_day) + 86400 * ($course->day - 1)) . " " . $course->starttime,
-            ]);
+        if (!$redis_status) {
+            Course::removeCourseThisWeek();
+            exit;
         }
+
+        Course::createCourseThisWeek();
     }
 }

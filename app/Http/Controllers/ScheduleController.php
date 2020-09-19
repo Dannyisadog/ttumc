@@ -6,12 +6,15 @@ use App\Band as Band;
 use App\Course as Course;
 use App\Schedule as Schedule;
 use App\User as User;
+use App\Week as Week;
 use Auth;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use SweetAlert;
+use Illuminate\Routing\Controller as BaseController;
 
-class ScheduleController extends Controller
+class ScheduleController extends BaseController
 {
     public function showSchedule(Request $request)
     {
@@ -298,18 +301,10 @@ class ScheduleController extends Controller
         if (!Auth::check()) {
             return redirect()->route('schedule');
         }
-        $course = Course::all();
 
-        foreach ($course as $item) {
-            $day = $item->day;
-            $starttime = $item->starttime;
+        Redis::set(Course::STATUS_KEY, 0);
 
-            $thisweek = strtotime("this week");
-            $date = date('Y-m-d', $thisweek + 86400 * ($day - 1));
-            $daytime = $date . " " . $starttime;
-
-            $delete = Schedule::where('starttime', $daytime)->delete();
-        }
+        Course::removeCourseThisWeek();
 
         return redirect()->route('schedule');
     }
@@ -319,24 +314,9 @@ class ScheduleController extends Controller
             return redirect()->route('schedule');
         }
 
-        $course = Course::all();
+        Redis::set(Course::STATUS_KEY, 1);
 
-        foreach ($course as $item) {
-            $day = $item->day;
-            $starttime = $item->starttime;
-
-            $thisweek = strtotime("this week");
-            $date = date('Y-m-d', $thisweek + 86400 * ($day - 1));
-            $daytime = $date . " " . $starttime;
-
-            $schedule = new Schedule;
-
-            $schedule->orderby = Auth::id();
-            $schedule->title = $item->title;
-            $schedule->starttime = $daytime;
-
-            $schedule->save();
-        }
+        Course::createCourseThisWeek();
 
         return redirect()->route('schedule');
     }
@@ -403,12 +383,12 @@ class ScheduleController extends Controller
 
     private function getThisWeekSchedules()
     {
-        $week_first_day = date('Y-m-d', strtotime('monday this week'));
-        $week_last_day = date('Y-m-d', strtotime('monday this week') + 86400 * 7);
+        list($start, $end) = Week::getWeekRange();
+
         return Schedule::where('valid', 'Y')
-            ->where('starttime', '>=', $week_first_day)
-            ->where('starttime', '<', $week_last_day)
+            ->whereBetween('starttime', [$start, $end])
             ->get();
+           
     }
 
     private function getThisWeekDates()

@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Band as Band;
 use App\BandUserMapping;
-use App\Course as Course;
 use App\Feedback as Feedback;
 use App\Schedule as Schedule;
 use App\User as User;
 use Auth;
-use DB;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
