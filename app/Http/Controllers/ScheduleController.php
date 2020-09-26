@@ -40,7 +40,7 @@ class ScheduleController extends BaseController
             $schedule_data['date_can_order_map'] = $date_can_order_map;
         }
 
-        $selector_mw = 1;
+        $selector_mw = date('w') == 0 ? 7 : date('w');
 
         if ($request->input('selector') && in_array($request->input('selector'), $selectors)) {
             $selector_mw = $request->input('selector');
