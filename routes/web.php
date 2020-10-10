@@ -25,6 +25,7 @@ Route::get('/home', 'ScheduleController@showSchedule')->name('home');
 //Schedule Route
 Route::get('/schedule', 'ScheduleController@showSchedule')->name('schedule');
 Route::get('/getSchedules', 'ScheduleController@getSchedules');
+Route::delete('/deleteSchedule', 'ScheduleController@deleteSchedule');
 Route::delete('/schedule', 'ScheduleController@deleteSchedule')->name('deleteschedule');
 Route::patch('/schedule', 'ScheduleController@updateSchedule');
 Route::get('/schedulemgm', 'ScheduleController@showScheduleMgm')->name('schedulemgm');

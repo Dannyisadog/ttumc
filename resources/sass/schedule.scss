@@ -1,13 +1,19 @@
 @import './variables';
 .container {
-    .btn-order, .btn-selector {
+    .btn-order, .btn-selector, .btn-delete-schedule {
         border: 1px solid #ffffff55;;
-        background-color: $dark-grey;
+        background: $dark-grey;
+        color: $white;
     }
 
     .btn-order:hover, .btn-selector:hover {
         border: 1px solid $blue;
-        background-color: $blue;
+        background: $blue;
+    }
+
+    .btn-delete-schedule:hover {
+        background: #e3342f;
+        border: 1px solid #e3342f;
     }
 }
 
@@ -75,7 +81,7 @@
         #order-table-mw {
             margin: 25px auto;
 
-            .order-time-mw {
+            .order-item-mw {
                 vertical-align: middle;
                 font-size: 20px;
             }

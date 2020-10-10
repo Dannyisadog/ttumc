@@ -167,6 +167,10 @@ class ScheduleController extends BaseController
 
     public function deleteSchedule(Request $request)
     {
+        $result = [
+            'success' => true,
+            'msg' => '刪除成功'
+        ];
         if (!Auth::check()) {
             return redirect()->route('schedule');
         }
@@ -197,11 +201,11 @@ class ScheduleController extends BaseController
 
             Schedule::destroy($schedule_id);
         } catch (Exception $e) {
-            SweetAlert::error($e);
+            $result['success'] = false;
+            $result['msg'] = $e->getMessage();
         }
 
-        SweetAlert::success('取消成功');
-        return redirect()->route('schedule');
+        echo json_encode($result);
     }
     public function showScheduleMgm()
     {
@@ -337,66 +341,94 @@ class ScheduleController extends BaseController
 
     public function getSchedules()
     {
+        $result = [
+            'success' => true,
+            'data' => null,
+        ];
+
         $user = null;
         
         if (Auth::check()) {
             $user = Auth::user();
         }
 
-        $this_week_schedules = $this->getThisWeekSchedules();
-        $new_this_week_schedules = [];
-
-        foreach ($this_week_schedules as $schedule) {
-            $new_this_week_schedules[strtotime($schedule->starttime)] = $schedule;
-        }
-
-        $this_week_schedules = $new_this_week_schedules;
-
-        $start_hour = 8;
-        $end_hour = 23;
-
-        $schedules = [];
-
-        $current_time = strtotime(date('Y-m-d H:i:s'));
-
-        $this_week_dates = $this->getThisWeekDates();
-
-        for ($hour = $start_hour; $hour <= $end_hour; $hour++) {
-            foreach ($this_week_dates as $date) {
-                $title = null;
-                $orderby = null;
-                $belongs_to = null;
-                $can_order = true;
-                $is_owner = false;
-
-                $starttime = strtotime(date("{$date} {$hour}:00:00"));
-
-                if (isset($new_this_week_schedules[$starttime])) {
-                    $title = $new_this_week_schedules[$starttime]->title;
-                    $orderby = $new_this_week_schedules[$starttime]->orderby;
-                    $belongs_to = $new_this_week_schedules[$starttime]->getOrderById();
-                    $can_order = false;
-                }
-
-                if ($starttime < $current_time) {
-                    $can_order = false;
-                }
-
-                if ($user && isset($new_this_week_schedules[$starttime]) && $new_this_week_schedules[$starttime]->user()->id = $user->id) {
-                    $is_owner = true;
-                }
-
-                $schedules[$hour][] = [
-                    'title' => $title,
-                    'orderby' => $orderby,
-                    'belongs_to' => $belongs_to,
-                    'can_order' => $can_order,
-                    'is_owner' => $is_owner
-                ];
+        try {
+            $this_week_schedules = $this->getThisWeekSchedules();
+            $new_this_week_schedules = [];
+    
+            foreach ($this_week_schedules as $schedule) {
+                $new_this_week_schedules[strtotime($schedule->starttime)] = $schedule;
             }
+    
+            $this_week_schedules = $new_this_week_schedules;
+    
+            $start_hour = 8;
+            $end_hour = 23;
+    
+            $schedules = [];
+    
+            $current_time = strtotime(date('Y-m-d H:i:s'));
+    
+            $this_week_dates = $this->getThisWeekDates();
+            $week_can_order = $this->weekCanOrderByCount();
+    
+            for ($hour = $start_hour; $hour <= $end_hour; $hour++) {
+                foreach ($this_week_dates as $date) {
+                    $schedule_id = null;
+                    $title = null;
+                    $orderby = null;
+                    $belongs_to = null;
+                    $can_order = true;
+                    $is_owner = false;
+                    $expired = false;
+                    $dateTime = null;
+    
+                    $starttime = strtotime(date("{$date} {$hour}:00:00"));
+                    $dateTime = date('Y-m-d H:i:00', $starttime);
+
+                    $schedules[$hour][0] = [
+                        'title' => sprintf("%02d:00", $hour)
+                    ];
+    
+                    if (!$week_can_order) {
+                        $can_order = false;
+                    }
+
+                    if (isset($this_week_schedules[$starttime])) {
+                        $schedule_id = $this_week_schedules[$starttime]->id;
+                        $title = $this_week_schedules[$starttime]->title;
+                        $orderby = $this_week_schedules[$starttime]->orderby;
+                        $belongs_to = $this_week_schedules[$starttime]->getOrderById();
+                        $can_order = false;
+                    }
+    
+                    if ($starttime < $current_time) {
+                        $can_order = false;
+                        $expired = true;
+                    }
+    
+                    if ($user && isset($this_week_schedules[$starttime]) && $this_week_schedules[$starttime]->user()->id = $user->id) {
+                        $is_owner = true;
+                    }
+    
+                    $schedules[$hour][] = [
+                        'schedule_id' => $schedule_id,
+                        'title' => $title,
+                        'orderby' => $orderby,
+                        'expired' => $expired,
+                        'belongs_to' => $belongs_to,
+                        'can_order' => $can_order,
+                        'is_owner' => $is_owner,
+                        'dateTime' => $dateTime 
+                    ];
+                }
+            }    
+            $result['data'] = $schedules;
+        } catch (Exception $e) {
+            $result['success'] = false;
         }
 
-        echo json_encode($schedules);
+        echo json_encode($result);
     }
 
     private function user_order($datetime)

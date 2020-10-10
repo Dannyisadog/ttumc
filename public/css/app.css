@@ -10953,15 +10953,22 @@ a.text-dark:focus {
 }
 
 .container .btn-order,
-.container .btn-selector {
+.container .btn-selector,
+.container .btn-delete-schedule {
   border: 1px solid #ffffff55;
-  background-color: #272a2e;
+  background: #272a2e;
+  color: #cdcdce;
 }
 
 .container .btn-order:hover,
 .container .btn-selector:hover {
   border: 1px solid #3490dc;
-  background-color: #3490dc;
+  background: #3490dc;
+}
+
+.container .btn-delete-schedule:hover {
+  background: #e3342f;
+  border: 1px solid #e3342f;
 }
 
 @media only screen and (min-width: 768px) {
@@ -11036,7 +11043,7 @@ a.text-dark:focus {
     margin: 25px auto;
   }
 
-  #schedule-container-mw #order-table-mw .order-time-mw {
+  #schedule-container-mw #order-table-mw .order-item-mw {
     vertical-align: middle;
     font-size: 20px;
   }
