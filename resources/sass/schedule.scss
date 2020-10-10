@@ -17,6 +17,37 @@
     }
 }
 
+#order-modal-content {
+    border-radius: 10px;
+
+    .modal-header {
+        color: $white;
+        border-bottom: 1px solid #696969;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #696969;
+    }
+
+    #order-modal-body {
+        height: 150px;
+        display:flex;
+        flex-direction: column;
+        justify-content: space-around;
+        
+        .btn-order {
+            border: 1px solid #ffffff55;
+            background: #272a2e;
+            color: #cdcdce;
+        }
+
+        .btn-order:hover {
+            background-color: #3490dc;
+            border-color: #3490dc;
+        }
+    }
+}
+
 @media only screen and (min-width: 768px) {
     #schedule-container-mw {
         display: none !important;
@@ -26,6 +57,7 @@
     }
 }
 @media only screen and (max-width: 768px) {
+    
     #schedule-container-mw {
         display: block;
     }
@@ -87,6 +119,39 @@
             }
             .order-item-mw {
                 font-size: 20px;
+            }
+        }
+    }
+
+    #order-modal-content {
+        border-radius: 10px;
+        width: 400px;
+        margin:0 auto;
+    
+        .modal-header {
+            color: $white;
+            border-bottom: 1px solid #696969;
+        }
+    
+        .modal-footer {
+            border-top: 1px solid #696969;
+        }
+    
+        #order-modal-body {
+            height: 150px;
+            display:flex;
+            flex-direction: column;
+            justify-content: space-around;
+            
+            .btn-order {
+                border: 1px solid #ffffff55;
+                background: #272a2e;
+                color: #cdcdce;
+            }
+    
+            .btn-order:hover {
+                background-color: #3490dc;
+                border-color: #3490dc;
             }
         }
     }

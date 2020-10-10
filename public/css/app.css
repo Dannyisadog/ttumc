@@ -10971,6 +10971,37 @@ a.text-dark:focus {
   border: 1px solid #e3342f;
 }
 
+#order-modal-content {
+  border-radius: 10px;
+}
+
+#order-modal-content .modal-header {
+  color: #cdcdce;
+  border-bottom: 1px solid #696969;
+}
+
+#order-modal-content .modal-footer {
+  border-top: 1px solid #696969;
+}
+
+#order-modal-content #order-modal-body {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#order-modal-content #order-modal-body .btn-order {
+  border: 1px solid #ffffff55;
+  background: #272a2e;
+  color: #cdcdce;
+}
+
+#order-modal-content #order-modal-body .btn-order:hover {
+  background-color: #3490dc;
+  border-color: #3490dc;
+}
+
 @media only screen and (min-width: 768px) {
   #schedule-container-mw {
     display: none !important;
@@ -11050,6 +11081,39 @@ a.text-dark:focus {
 
   #schedule-container-mw #order-table-mw .order-item-mw {
     font-size: 20px;
+  }
+
+  #order-modal-content {
+    border-radius: 10px;
+    width: 400px;
+    margin: 0 auto;
+  }
+
+  #order-modal-content .modal-header {
+    color: #cdcdce;
+    border-bottom: 1px solid #696969;
+  }
+
+  #order-modal-content .modal-footer {
+    border-top: 1px solid #696969;
+  }
+
+  #order-modal-content #order-modal-body {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  #order-modal-content #order-modal-body .btn-order {
+    border: 1px solid #ffffff55;
+    background: #272a2e;
+    color: #cdcdce;
+  }
+
+  #order-modal-content #order-modal-body .btn-order:hover {
+    background-color: #3490dc;
+    border-color: #3490dc;
   }
 }
 
