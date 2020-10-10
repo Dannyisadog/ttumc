@@ -18,8 +18,6 @@ class ScheduleController extends BaseController
 {
     public function showSchedule(Request $request)
     {
-        // $this->getSchedules();
-        // exit;
         $selectors = [1, 2, 3, 4, 5, 6, 7];
         $selector_weekday_map = [
             1 => '星期一',
@@ -574,6 +572,10 @@ class ScheduleController extends BaseController
         $can_order = false;
 
         $user = Auth::user();
+
+        if (!$user) {
+            return false;
+        }
 
         $bands = $user->getBands();
 
