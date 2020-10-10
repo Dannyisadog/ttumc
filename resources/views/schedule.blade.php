@@ -79,55 +79,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i=8; $i<24; $i++)
-                        <tr>
-                        @for ($j=0; $j<2; $j++)
-                            @if ($j == 0)
-                                <td height="60px" class="order-item-mw">
-                                    {{ sprintf("%02d:00", $i) }}
-                                </td>
-                            @else
-                               <?php $datetime = date("Y-m-d H:i:s", strtotime('monday this week') + ($i)*3600 + ($selector-1)*86400); ?>
-                                @if (Auth::check())
-                                    @if (isset($schedule_map[$datetime]))
-                                        <td height="60px" class="order-item-mw">
-                                            <div class="table-item">
-                                            @if (in_array(Auth::user()->id, $schedule_map[$datetime]["user_ids"]) && strtotime($datetime) > strtotime(date('Y-m-d H:i:s')))
-                                                {{Form::open(array('method'=>'delete','route' => 'deleteschedule'))}}
-                                                {{Form::hidden('schedule_id', $schedule_map[$datetime]["schedule_id"])}}
-                                                {{Form::submit($schedule_map[$datetime]["order_title"] . "x", array('class'=>'btn btn-danger'))}}
-                                                {{Form::close()}}
-                                            @else
-                                                {{$schedule_map[$datetime]["order_title"]}}
-                                            @endif
-                                            </div>
-                                        </td>
-                                    @else
-                                        <td height="60px" class="order-item-mw">
-                                            <div class="order-item">
-                                            @if ($week_can_order && $date_can_order_map[date('Y-m-d', strtotime($datetime))] && strtotime($datetime) > strtotime(date('Y-m-d H:i:s')))
-                                                <button class="btn btn-primary btn-order" onclick="orderCheck('{{$datetime}}')">+</button>
-                                            @endif
-                                            </div>
-                                        </td>
-                                    @endif
-                                @else
-                                    @if (isset($schedule_map[$datetime]))
-                                        <td height="60px" class="order-item-mw">
-                                            <div class="table-item">
-                                            {{$schedule_map[$datetime]["order_title"]}}
-                                            </div>
-                                        </td>
-                                    @else
-                                        <td height="60px">
-                                            
-                                        </td>
-                                    @endif
-                                @endif
-                            @endif
-                        @endfor
-                        </tr>
-                    @endfor
+                    <tr v-for="hour_schedule in schedules">
+                        <td class="table-item">
+                            <button v-if="hour_schedule[0].is_owner && !hour_schedule[0].expired" @click="deleteSchedule(hour_schedule[0].schedule_id)" class="btn btn-delete-schedule">${hour_schedule[0].title} x</button>
+                            <button v-else-if="hour_schedule[0].can_order" @click="checkSchedule(hour_schedule[0].dateTime)" class="btn btn-primary btn-order">+</button>
+                            <div v-else>
+                                ${ hour_schedule[0].title }
+                            </div>
+                        </td>
+                        <td class="table-item">
+                            <button v-if="hour_schedule[{{$selector}}].is_owner && !hour_schedule[{{$selector}}].expired" @click="deleteSchedule(hour_schedule[{{$selector}}].schedule_id)" class="btn btn-delete-schedule">${hour_schedule[{{$selector}}].title} x</button>
+                            <button v-else-if="hour_schedule[{{$selector}}].can_order" @click="checkSchedule(hour_schedule[{{$selector}}].dateTime)" class="btn btn-primary btn-order">+</button>
+                            <div v-else>
+                                ${ hour_schedule[{{$selector}}].title }
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
