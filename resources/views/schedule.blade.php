@@ -102,18 +102,12 @@
     <!-- Modal -->
     <div class="modal fade" id="can-multi-order-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content" style="background-color: #212529;">
-                <div class="modal-body">
-                    <table class="table table-dark table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">選擇預約身份</th>
-                            </tr>
-                        </thead>
-                        <tbody class="order-identities-body">     
-                                                                                                                                                                                           <tr>
-                        </tbody>
-                    </table>
+            <div id="order-modal-content" class="modal-content" style="background-color: #212529;">
+                <div class="modal-header">
+                    選擇預約身份
+                </div>
+                <div id="order-modal-body" class="modal-body">
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">關閉</button>

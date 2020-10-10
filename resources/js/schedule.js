@@ -131,12 +131,14 @@ function order(identity, datetime) {
 }
 
 function appendIdentitiesToModal(identities, datetime) {
-    var modalBody = document.querySelector(".order-identities-body");
-    console.log(identities);
+    var modalBody = document.querySelector("#order-modal-body");
+    modalBody.innerHTML = '';
     identities.forEach(identity => {
-        var tr = document.createElement("tr");
+        var tr = document.createElement("div");
 
-        var td = document.createElement("td");
+        tr.setAttribute('class', 'order-identity-item');
+
+        var td = document.createElement("div");
 
         var button = document.createElement("button");
         button.classList.add("btn");
