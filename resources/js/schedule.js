@@ -51,7 +51,7 @@ function deleteSchedule(schedule_id) {
         dataType: 'json',
         success: function (resp) {
             if (resp.success) {
-                toastr.success(resp.msg);
+                toastr.info(resp.msg);
             } else {
                 toastr.error(resp.msg);
             }
