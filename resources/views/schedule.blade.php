@@ -3,6 +3,7 @@
 @section('title', '練團表')
 
 @section('style')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
     <style>
         #schedule-container-pc{
             width: 100%;
@@ -198,66 +199,37 @@
 @endsection
 
 @section('js-down')
-    <script>
-        function sleep(milliseconds) {
-            var start = new Date().getTime();
-            for (var i = 0; i < 1e7; i++) {
-                if ((new Date().getTime() - start) > milliseconds){
-                break;
-                }
+<script src="{{ asset('js/schedule.js') }}" defer></script>
+
+<script>
+    function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds){
+            break;
             }
         }
-        window.addEventListener("load", function (){
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $('#can-multi-order-modal').on('hidden.bs.modal', function (e) {
-                $('.order-identities-body').empty();
-            })
+    }
+    window.addEventListener("load", function (){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
-        function order_check(datetime) {
-            $.ajax({
-                url: './schedule/order_check',
-                method: 'post',
-                data: {
-                    "datetime": datetime,
-                },
-                dataType: 'json',
-                success: function(resp) {
-                    if (resp.status === true && resp.can_multi_order === false) {
-                        swal({
-                            title: resp.msg,
-                            icon: "success",
-                        })
-                        .then(() => {
-                            location.reload();
-                        });
-                    }
-                    if (resp.status === true && resp.can_multi_order === true) {
-                        let identities = resp.identities;
-                        appendIdentitiesToModal(identities, datetime);
-                        $('#can-multi-order-modal').modal('show');
-                    }
-                },
-                error: function (xhr) {
-                    alert("error");
-                }
-            });
-        }
-
-        function order(identity, datetime) {
-            $.ajax({
-                url: './schedule/order',
-                method: 'post',
-                data: {
-                    "identity": identity,
-                    "datetime": datetime
-                },
-                dataType: 'json',
-                success: function (resp) {
-                    console.log(resp);
+        $('#can-multi-order-modal').on('hidden.bs.modal', function (e) {
+            $('.order-identities-body').empty();
+        })
+    });
+    function order_check(datetime) {
+        $.ajax({
+            url: './schedule/order_check',
+            method: 'post',
+            data: {
+                "datetime": datetime,
+            },
+            dataType: 'json',
+            success: function(resp) {
+                if (resp.status === true && resp.can_multi_order === false) {
                     swal({
                         title: resp.msg,
                         icon: "success",
@@ -265,41 +237,72 @@
                     .then(() => {
                         location.reload();
                     });
-                },
-                error: function (xhr) {
-                    swal.fire("預約失敗", "", "error");
                 }
-            });
-        }
+                if (resp.status === true && resp.can_multi_order === true) {
+                    let identities = resp.identities;
+                    appendIdentitiesToModal(identities, datetime);
+                    $('#can-multi-order-modal').modal('show');
+                }
+            },
+            error: function (xhr) {
+                alert("error");
+            }
+        });
+    }
 
-        function appendIdentitiesToModal(identities, datetime) {
-            var modalBody = document.querySelector(".order-identities-body");
-
-            identities.forEach(identity => {
-                var tr = document.createElement("tr");
-
-                var td = document.createElement("td");
-
-                var button = document.createElement("button");
-                button.classList.add("btn");
-                button.classList.add("btn-primary");
-                button.classList.add("btn-block");
-                button.classList.add("btn-order");
-
-                button.addEventListener("click", function () {
-                    return order(identity, datetime);
+    function order(identity, datetime) {
+        $.ajax({
+            url: './schedule/order',
+            method: 'post',
+            data: {
+                "identity": identity,
+                "datetime": datetime
+            },
+            dataType: 'json',
+            success: function (resp) {
+                console.log(resp);
+                swal({
+                    title: resp.msg,
+                    icon: "success",
+                })
+                .then(() => {
+                    location.reload();
                 });
+            },
+            error: function (xhr) {
+                swal.fire("預約失敗", "", "error");
+            }
+        });
+    }
 
-                var buttonText = document.createTextNode(identity.order_title);
+    function appendIdentitiesToModal(identities, datetime) {
+        var modalBody = document.querySelector(".order-identities-body");
 
-                button.appendChild(buttonText);
+        identities.forEach(identity => {
+            var tr = document.createElement("tr");
 
-                td.appendChild(button);
+            var td = document.createElement("td");
 
-                tr.appendChild(td);
+            var button = document.createElement("button");
+            button.classList.add("btn");
+            button.classList.add("btn-primary");
+            button.classList.add("btn-block");
+            button.classList.add("btn-order");
 
-                modalBody.appendChild(tr);
+            button.addEventListener("click", function () {
+                return order(identity, datetime);
             });
-        }
-    </script>
+
+            var buttonText = document.createTextNode(identity.order_title);
+
+            button.appendChild(buttonText);
+
+            td.appendChild(button);
+
+            tr.appendChild(td);
+
+            modalBody.appendChild(tr);
+        });
+    }
+</script>
 @endsection
