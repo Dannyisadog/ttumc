@@ -3,6 +3,7 @@
 @section('title', '練團表')
 
 @section('style')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
     <style>
         #schedule-container-pc{
             width: 100%;
@@ -40,57 +41,15 @@
               </tr>
             </thead>
             <tbody>
-                @for ($i=8; $i<24; $i++)
-                    <tr>
-                    @for ($j=0; $j<8; $j++)
-                        @if ($j == 0)
-                            <td class="table-item center">
-                                <div class="table-item">
-                                    {{ sprintf("%02d:00", $i) }}
-                                </div>
-                            </td>
-                        @else
-                            <?php $datetime = date("Y-m-d H:i:s", strtotime('monday this week') + ($i)*3600 + ($j-1)*86400); ?>
-                            @if (Auth::check())
-                                @if (isset($schedule_map[$datetime]))
-                                    <td class="table-item center">
-                                        <div class="table-item">
-                                        @if (in_array(Auth::user()->id, $schedule_map[$datetime]["user_ids"]) && strtotime($datetime) > strtotime(date('Y-m-d H:i:s')))
-                                            {{Form::open(array('method'=>'delete','route' => 'deleteschedule'))}}
-                                            {{Form::hidden('schedule_id', $schedule_map[$datetime]["schedule_id"])}}
-                                            {{Form::submit($schedule_map[$datetime]["order_title"] . "x", array('class'=>'btn btn-danger'))}}
-                                            {{Form::close()}}
-                                        @else
-                                            {{$schedule_map[$datetime]["order_title"]}}
-                                        @endif
-                                        </div>
-                                    </td>
-                                @else
-                                    <td class="table-item center">
-                                        <div class="table-item">
-                                        @if ($week_can_order && $date_can_order_map[date('Y-m-d', strtotime($datetime))] && strtotime($datetime) > strtotime(date('Y-m-d H:i:s')))
-                                            <button class="btn btn-primary btn-order" onclick="order_check('{{$datetime}}')">+</button>
-                                        @endif
-                                        </div>
-                                    </td>
-                                @endif
-                            @else
-                                @if (isset($schedule_map[$datetime]))
-                                    <td class="table-item center">
-                                        <div class="table-item">
-                                        {{$schedule_map[$datetime]["order_title"]}}
-                                        </div>
-                                    </td>
-                                @else
-                                    <td>
-
-                                    </td>
-                                @endif
-                            @endif
-                        @endif
-                    @endfor
-                    </tr>
-                @endfor
+                <tr v-for="hour_schedule in schedules">
+                    <td v-for="schedule in hour_schedule" class="table-item">
+                        <button v-if="schedule.is_owner && !schedule.expired" @click="deleteSchedule(schedule.schedule_id)" class="btn btn-delete-schedule">${schedule.title} x</button>
+                        <button v-else-if="schedule.can_order" @click="checkSchedule(schedule.dateTime)" class="btn btn-primary btn-order">+</button>
+                        <div v-else>
+                            ${ schedule.title }
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -124,7 +83,7 @@
                         <tr>
                         @for ($j=0; $j<2; $j++)
                             @if ($j == 0)
-                                <td height="60px" class="order-time-mw">
+                                <td height="60px" class="order-item-mw">
                                     {{ sprintf("%02d:00", $i) }}
                                 </td>
                             @else
@@ -147,7 +106,7 @@
                                         <td height="60px" class="order-item-mw">
                                             <div class="order-item">
                                             @if ($week_can_order && $date_can_order_map[date('Y-m-d', strtotime($datetime))] && strtotime($datetime) > strtotime(date('Y-m-d H:i:s')))
-                                                <button class="btn btn-primary btn-order" onclick="order_check('{{$datetime}}')">+</button>
+                                                <button class="btn btn-primary btn-order" onclick="orderCheck('{{$datetime}}')">+</button>
                                             @endif
                                             </div>
                                         </td>
@@ -198,108 +157,5 @@
 @endsection
 
 @section('js-down')
-    <script>
-        function sleep(milliseconds) {
-            var start = new Date().getTime();
-            for (var i = 0; i < 1e7; i++) {
-                if ((new Date().getTime() - start) > milliseconds){
-                break;
-                }
-            }
-        }
-        window.addEventListener("load", function (){
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $('#can-multi-order-modal').on('hidden.bs.modal', function (e) {
-                $('.order-identities-body').empty();
-            })
-        });
-        function order_check(datetime) {
-            $.ajax({
-                url: './schedule/order_check',
-                method: 'post',
-                data: {
-                    "datetime": datetime,
-                },
-                dataType: 'json',
-                success: function(resp) {
-                    if (resp.status === true && resp.can_multi_order === false) {
-                        swal({
-                            title: resp.msg,
-                            icon: "success",
-                        })
-                        .then(() => {
-                            location.reload();
-                        });
-                    }
-                    if (resp.status === true && resp.can_multi_order === true) {
-                        let identities = resp.identities;
-                        appendIdentitiesToModal(identities, datetime);
-                        $('#can-multi-order-modal').modal('show');
-                    }
-                },
-                error: function (xhr) {
-                    alert("error");
-                }
-            });
-        }
-
-        function order(identity, datetime) {
-            $.ajax({
-                url: './schedule/order',
-                method: 'post',
-                data: {
-                    "identity": identity,
-                    "datetime": datetime
-                },
-                dataType: 'json',
-                success: function (resp) {
-                    console.log(resp);
-                    swal({
-                        title: resp.msg,
-                        icon: "success",
-                    })
-                    .then(() => {
-                        location.reload();
-                    });
-                },
-                error: function (xhr) {
-                    swal.fire("預約失敗", "", "error");
-                }
-            });
-        }
-
-        function appendIdentitiesToModal(identities, datetime) {
-            var modalBody = document.querySelector(".order-identities-body");
-
-            identities.forEach(identity => {
-                var tr = document.createElement("tr");
-
-                var td = document.createElement("td");
-
-                var button = document.createElement("button");
-                button.classList.add("btn");
-                button.classList.add("btn-primary");
-                button.classList.add("btn-block");
-                button.classList.add("btn-order");
-
-                button.addEventListener("click", function () {
-                    return order(identity, datetime);
-                });
-
-                var buttonText = document.createTextNode(identity.order_title);
-
-                button.appendChild(buttonText);
-
-                td.appendChild(button);
-
-                tr.appendChild(td);
-
-                modalBody.appendChild(tr);
-            });
-        }
-    </script>
+<script src="{{ asset('js/schedule.js') }}" defer></script>
 @endsection

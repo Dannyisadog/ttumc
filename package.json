@@ -25,6 +25,8 @@
     "vue-template-compiler": "^2.6.10"
   },
   "dependencies": {
-    "sweetalert2": "^9.15.2"
+    "sweetalert2": "^9.15.2",
+    "toastify-js": "^1.9.3",
+    "toastr": "^2.1.4"
   }
 }

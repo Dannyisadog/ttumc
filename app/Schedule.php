@@ -26,4 +26,25 @@ class Schedule extends Model
     {
         return $this->belongsTo('App\Course', 'course_id', 'id');
     }
+
+    public function getOrderById()
+    {
+        $orderby_id = null;
+
+        switch ($this->order_by) {
+            case 'user' :
+                $orderby_id = $schedule->user_id;
+                break;
+            case 'band' :
+                $orderby_id = $schedule->band_id;
+                break;
+            case 'course' :
+                $orderby_id = $schedule->course_id;
+                break;
+            default :
+                break;
+        }
+
+        return $orderby_id;
+    }
 }
