@@ -11528,7 +11528,7 @@ function _deleteSchedule(schedule_id) {
     dataType: 'json',
     success: function success(resp) {
       if (resp.success) {
-        toastr__WEBPACK_IMPORTED_MODULE_0___default.a.success(resp.msg);
+        toastr__WEBPACK_IMPORTED_MODULE_0___default.a.info(resp.msg);
       } else {
         toastr__WEBPACK_IMPORTED_MODULE_0___default.a.error(resp.msg);
       }

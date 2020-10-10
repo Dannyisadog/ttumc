@@ -11233,3 +11233,10 @@ body,
   margin-top: 100px;
 }
 
+@media only screen and (max-width: 768px) {
+  .toast {
+    font-size: 25px;
+    width: 360px;
+  }
+}
+

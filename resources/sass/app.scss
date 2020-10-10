@@ -28,3 +28,10 @@ body, .table-dark {
 .toast-top-center {
     margin-top: 100px;
 }
+
+.toast {
+    @media only screen and (max-width: 768px) {
+        font-size: 25px;
+        width: 360px;
+    }
+}
