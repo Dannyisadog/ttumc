@@ -110,7 +110,7 @@
                     
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-primary btn-close" data-dismiss="modal">關閉</button>
                 </div>
             </div>
         </div>

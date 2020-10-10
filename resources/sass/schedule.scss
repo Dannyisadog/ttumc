@@ -131,14 +131,19 @@
         .modal-header {
             color: $white;
             border-bottom: 1px solid #696969;
+            font-size: 25px;
         }
     
         .modal-footer {
             border-top: 1px solid #696969;
+            .btn-close {
+                width: 100%;
+                font-size: 25px
+            }
         }
     
         #order-modal-body {
-            height: 150px;
+            height: 200px;
             display:flex;
             flex-direction: column;
             justify-content: space-around;
@@ -147,6 +152,7 @@
                 border: 1px solid #ffffff55;
                 background: #272a2e;
                 color: #cdcdce;
+                font-size: 25px;
             }
     
             .btn-order:hover {
