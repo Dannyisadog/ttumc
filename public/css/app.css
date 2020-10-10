@@ -11074,13 +11074,19 @@ a.text-dark:focus {
     margin: 25px auto;
   }
 
-  #schedule-container-mw #order-table-mw .order-item-mw {
-    vertical-align: middle;
-    font-size: 20px;
+  #schedule-container-mw #order-table-mw tr {
+    font-size: 25px;
   }
 
   #schedule-container-mw #order-table-mw .order-item-mw {
-    font-size: 20px;
+    vertical-align: middle;
+    font-size: 25px;
+  }
+
+  #schedule-container-mw #order-table-mw .btn-order,
+  #schedule-container-mw #order-table-mw .btn-delete-schedule {
+    font-size: 25px;
+    min-width: 60px;
   }
 
   #order-modal-content {

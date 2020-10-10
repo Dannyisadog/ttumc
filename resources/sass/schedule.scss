@@ -113,12 +113,18 @@
         #order-table-mw {
             margin: 25px auto;
 
+            tr {
+                font-size: 25px;
+            }
+
             .order-item-mw {
                 vertical-align: middle;
-                font-size: 20px;
+                font-size: 25px;
             }
-            .order-item-mw {
-                font-size: 20px;
+
+            .btn-order, .btn-delete-schedule {
+                font-size: 25px;
+                min-width: 60px;
             }
         }
     }
