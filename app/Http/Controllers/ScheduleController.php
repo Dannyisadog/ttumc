@@ -407,7 +407,7 @@ class ScheduleController extends BaseController
     
                     if ($user &&
                         isset($this_week_schedules[$starttime]) &&
-                        $this_week_schedules[$starttime]->user_id &&
+                        ($this_week_schedules[$starttime]->user_id || $this_week_schedules[$starttime]->band_id) && 
                         $this_week_schedules[$starttime]->user()->id = $user->id) {
                         $is_owner = true;
                     }
