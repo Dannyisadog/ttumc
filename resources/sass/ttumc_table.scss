@@ -1,17 +1,11 @@
 .table-item {
     vertical-align: middle !important;
 
-    .center {
-        text-align: center !important;
-    }
-    .left {
-        text-align: left !important;
-    }
-    .right {
-        text-align: right !important;
-    }
-
     @media only screen and (max-width: 768px) {
         font-size: 25px;
     }
+}
+
+.table-item-center {
+    text-align: center !important;
 }

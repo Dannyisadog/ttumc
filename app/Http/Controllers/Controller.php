@@ -31,16 +31,34 @@ class Controller extends BaseController
         }
         return redirect()->route('index');
     }
-    public function changeUserAdmin(Request $request)
+    public function updateUserPermission(Request $request)
     {
-        if (User::isadmin()) {
-            $userid = $request->input('userid');
-            $isadmin = $request->input('isadmin');
-            $update = User::where('id', $userid)->update(['admin' => $isadmin]);
-            return redirect()->route('usermanagement');
-        } else {
-            return redirect()->route('schedule');
+        $result = [
+            'success' => true,
+            'msg' => ''
+        ];
+
+        try {
+            if (!Auth::check()) {
+                throw new Exception();
+            }
+
+            $user = Auth::user();
+
+            if ($user->admin != 'Y') {
+                throw new Exception();
+            }
+
+            $userid = $request->input('user_id');
+            $isadmin = $request->input('isAdmin');
+
+            $user = User::where('id', $userid)->update(['admin' => "$isadmin"]);
+
+        } catch (Exception $e) {
+            $result['success'] = false;
         }
+
+        echo json_encode($result);
     }
 
     public function showUserBands()

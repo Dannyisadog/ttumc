@@ -3,7 +3,6 @@
 @section('title', '練團表')
 
 @section('style')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
     <style>
         #schedule-container-pc{
             width: 100%;
