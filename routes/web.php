@@ -41,6 +41,7 @@ Route::put('/resumeCourse', 'ScheduleController@resumeCourse')->name('resumeCour
 //usermgm Route
 Route::get('/usermanagement', 'Controller@showUserManagement')->name('usermanagement');
 Route::post('/usermanagement', 'Controller@changeUserAdmin')->name('changeuseradmin');
+Route::post('/updateUserPermission', 'Controller@updateUserPermission');
 
 //band Route
 Route::get('/band', 'Controller@showUserBands')->name('band');
