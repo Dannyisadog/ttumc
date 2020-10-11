@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Band as Band;
@@ -407,9 +406,23 @@ class ScheduleController extends BaseController
     
                     if ($user &&
                         isset($this_week_schedules[$starttime]) &&
-                        ($this_week_schedules[$starttime]->user_id || $this_week_schedules[$starttime]->band_id) && 
-                        $this_week_schedules[$starttime]->user()->id = $user->id) {
-                        $is_owner = true;
+                        ($this_week_schedules[$starttime]->user_id || $this_week_schedules[$starttime]->band_id)
+                        ) {
+                        if ($this_week_schedules[$starttime]->user_id && $this_week_schedules[$starttime]->user->id == $user->id) {
+                            $is_owner = true;    
+                        }
+                        if ($this_week_schedules[$starttime]->band_id) {
+                            $band = $this_week_schedules[$starttime]->band()->first();
+                            $bandUserMappings = $band->userMappings;
+                            foreach ($bandUserMappings as $bandUserMapping) {
+                                $band_user = $bandUserMapping->user;
+                                $schedule_belongs_to[] = $band_user->id;
+                            }
+
+                            if (in_array($user->id, $schedule_belongs_to)) {
+                                $is_owner = true;
+                            }
+                        }
                     }
     
                     $schedules[$hour][] = [
