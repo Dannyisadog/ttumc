@@ -405,7 +405,10 @@ class ScheduleController extends BaseController
                         $expired = true;
                     }
     
-                    if ($user && isset($this_week_schedules[$starttime]) && $this_week_schedules[$starttime]->user()->id = $user->id) {
+                    if ($user &&
+                        isset($this_week_schedules[$starttime]) &&
+                        $this_week_schedules[$starttime]->user_id &&
+                        $this_week_schedules[$starttime]->user()->id = $user->id) {
                         $is_owner = true;
                     }
     
