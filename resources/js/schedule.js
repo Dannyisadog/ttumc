@@ -89,12 +89,8 @@ function orderCheck(datetime) {
         dataType: 'json',
         success: function (resp) {
             if (resp.status === true && resp.can_multi_order === false) {
-                swal({
-                    title: resp.msg,
-                    icon: "success",
-                }).then(() => {
-                    location.reload();
-                });
+                toastr.success("預約成功");
+                getSchedules();
             }
             if (resp.status === true && resp.can_multi_order === true) {
                 let identities = resp.identities;
