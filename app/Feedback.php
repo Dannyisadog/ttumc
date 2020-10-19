@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Feedback extends Model
 {
@@ -11,4 +12,9 @@ class Feedback extends Model
     protected $fillable = [
         'userid', 'content'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'userid');
+    }
 }
