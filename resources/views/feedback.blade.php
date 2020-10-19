@@ -34,7 +34,9 @@
 
                 @foreach ($feedbacks as $feedback)
                 <div class="card" style="background-color: #34383d; color: #fff; margin-top :20px">
-                    <div class="card-header">{{ __('願望') }}</div>
+                    <div class="card-header">
+                        @admin{{$feedback->user->name}}的@endadmin願望
+                    </div>
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-12" style="font-size: 20px">
