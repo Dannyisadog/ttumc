@@ -26,7 +26,7 @@ class Controller extends BaseController
     public function showUserManagement()
     {
         if (User::isadmin()) {
-            $user = User::all();
+            $user = User::where('valid', 'Y')->get();
             return view('usermanagement', ['user' => $user]);
         }
         return redirect()->route('index');
