@@ -21,7 +21,9 @@ class fillCourses extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    
+    // 0 0 * * 1 /usr/bin/php /var/www/html/ttumc/artisan fill:courses
+    protected $description = 'fill courses every week on Monday 00:00';
 
     /**
      * Create a new command instance.
@@ -40,13 +42,16 @@ class fillCourses extends Command
      */
     public function handle()
     {
+        $date = date('Y-m-d H:i:s');
         $redis_status = Redis::get(Course::STATUS_KEY);
 
+        file_put_contents('/home/dannychen/fillcourse.log', $date . "  status: " . $redis_status . "\n", FILE_APPEND);
         if (!$redis_status) {
             Course::removeCourseThisWeek();
             exit;
         }
 
         Course::createCourseThisWeek();
+        exit;
     }
 }
