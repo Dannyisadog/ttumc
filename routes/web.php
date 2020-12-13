@@ -2,7 +2,7 @@
 
 include("testing/mail.php");
 
-Route::get('/', 'ScheduleController@showSchedule')->name('index');
+Route::get('/', 'HomeController@index')->name('index');
 
 // Authentication Routes...
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
