@@ -4,11 +4,7 @@
 
 @section('content')
 <div class="container">
-    <div id="home-page">
-        <div class="carousel-wrapper">
-            <carousel :images="carouselImages"></carousel>
-        </div>
-    </div>
+    <home-page id="home-page"></home-page>
 </div>
 @endsection
 

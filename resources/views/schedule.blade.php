@@ -54,13 +54,13 @@
     </div>
     <div class="container" id="schedule-container-mw">
         <div id="weekday-selector-container">
-            <a href="./?selector=1" id="mw-monday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==1 ) echo 'active-week-selector';?>">ㄧ</a>
-            <a href="./?selector=2" id="mw-tuesday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==2 ) echo 'active-week-selector';?>">二</a>
-            <a href="./?selector=3" id="mw-wednesday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==3 ) echo 'active-week-selector';?>">三</a>
-            <a href="./?selector=4" id="mw-thursday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==4 ) echo 'active-week-selector';?>">四</a>
-            <a href="./?selector=5" id="mw-friday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==5 ) echo 'active-week-selector';?>">五</a>
-            <a href="./?selector=6" id="mw-saturday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==6 ) echo 'active-week-selector';?>">六</a>
-            <a href="./?selector=7" id="mw-sunday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==7 ) echo 'active-week-selector';?>">日</a>
+            <a href="/schedule?selector=1" id="mw-monday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==1 ) echo 'active-week-selector';?>">ㄧ</a>
+            <a href="/schedule?selector=2" id="mw-tuesday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==2 ) echo 'active-week-selector';?>">二</a>
+            <a href="/schedule?selector=3" id="mw-wednesday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==3 ) echo 'active-week-selector';?>">三</a>
+            <a href="/schedule?selector=4" id="mw-thursday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==4 ) echo 'active-week-selector';?>">四</a>
+            <a href="/schedule?selector=5" id="mw-friday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==5 ) echo 'active-week-selector';?>">五</a>
+            <a href="/schedule?selector=6" id="mw-saturday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==6 ) echo 'active-week-selector';?>">六</a>
+            <a href="/schedule?selector=7" id="mw-sunday-selector" class="weekday-selector btn btn-primary btn-selector <?php if ($selector==7 ) echo 'active-week-selector';?>">日</a>
         </div>
         <div id="schedule-order-title-container">
             <div class="schedule-order-title-line"></div>

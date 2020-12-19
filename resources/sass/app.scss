@@ -15,6 +15,7 @@
 @import './layouts.scss';
 @import './ttumc_table.scss';
 @import './user_mgm.scss';
+@import './home.scss';
 
 main {
     margin-top: 75px;
@@ -38,4 +39,7 @@ body, .table-dark {
         font-size: 25px;
         width: 360px;
     }
+}
+a {
+    text-decoration: none !important;
 }
