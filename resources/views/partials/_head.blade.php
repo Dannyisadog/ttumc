@@ -3,7 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.7">
     <meta name="description" content="大同大學熱音社 練團表">
     
-    <title>TTUMC - @yield('title')</title>
+    <title>大同大學熱音社 - @yield('title')</title>
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
