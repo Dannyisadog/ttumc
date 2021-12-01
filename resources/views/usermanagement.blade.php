@@ -4,6 +4,7 @@
 
 @section('style')
 <style>
+
 .switch {
   position: relative;
   display: inline-block;
@@ -63,11 +64,15 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+td {
+  padding: 10px 20px !important;
+}
 </style>
 @endsection
 
 @section('content')
-    <div class="container">
+    <div class="container" style="margin-top: 30px;">
         <table class="table table-dark table-bordered">
             <thead>
               <tr>
@@ -82,10 +87,10 @@ input:checked + .slider:before {
             <?php $count = 1; ?>
             @foreach ($user as $item)
                 <tr>
-                    <td class="table-item">{{$count++}}</td>
-                    <td class="table-item">{{$item->name}}</td>
-                    <td class="table-item">{{$item->email}}</td>
-                    <td class="table-item">{{$item->lastlogintime}}</td>
+                    <td>{{$count++}}</td>
+                    <td>{{$item->name}}</td>
+                    <td>{{$item->email}}</td>
+                    <td>{{$item->lastlogintime}}</td>
                     <td class="table-item-center">
                         @if (Auth::user()->id != $item->id)
                         <label class="switch">

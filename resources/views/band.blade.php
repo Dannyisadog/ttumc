@@ -14,10 +14,10 @@
 @endsection
 
 @section('content')
-    <div class="container">
+    <div class="container" style="margin-top: 30px;">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card" style="background-color: rgb(52, 56, 61); color: rgb(255, 255, 255);">
+                <div class="card" style="background-color: #222222; color: rgb(255, 255, 255);">
                     <div class="card-header">{{ __('新增所屬樂團') }}</div>
     
                     <div class="card-body">
@@ -28,12 +28,11 @@
                                     {{ session()->get('error-msg') }}
                                 </div>
                             @endif
-                            <div class="form-group row">
-                                <label for="email" class="col-md-3 col-form-label text-md-right">{{ __('樂團名稱') }}</label>
-    
-                                <div class="col-md-6" style="display:flex">
-                                    <input style="width:100%;" id="bandname" type="text" class="form-control" name="bandname" required autocomplete="bandname" autofocus placeholder="(團長或負責人填寫)">
-                                    <input style="margin-left: 10px;"type="submit" class="btn btn-primary" value="{{ __('新增') }}">
+                            <div class="form-group row"> 
+                                <div class="col-md-8" style="display:flex; align-items: center">
+                                    <div style="width:70px;">樂團名稱</div>
+                                    <input id="bandname" style="width: 300px; " type="text" class="form-control" name="bandname" required autocomplete="bandname" autofocus >
+                                    <input style="margin-left: 10px; width: 80px; height: 40px;"type="submit" class="btn btn-primary btn-blue" value="{{ __('新增') }}">
                                 </div>
                             </div>
 
@@ -42,7 +41,7 @@
                     
                 </div>
 
-                <div class="card" style="margin-top: 30px; background-color: rgb(52, 56, 61); color: rgb(255, 255, 255);">
+                <div class="card" style="margin-top: 30px; background-color: #222222; color: rgb(255, 255, 255);">
                     @if(session()->has('del-error-msg'))
                         <div class="alert alert-danger">
                             {{ session()->get('del-error-msg') }}

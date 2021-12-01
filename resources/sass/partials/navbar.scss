@@ -1,11 +1,12 @@
 @import 'variables';
 .navbar {
+    font-family: 'Sandora', sans-serif;
     width: 96%;
     top: 10px;
+    height: 110px;
     margin: 0 auto;
-    background-color: #2e3135;
     border-radius: 10px;
-    position: fixed;
+
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -14,18 +15,42 @@
     right: 0px;
     z-index: 1;
 
+    .container {
+        display: flex;
+        justify-content: center;
+
+        #navbarSupportedContent {
+            position: absolute;
+            right: 0;
+        }
+    }
+
     .navbar-brand {
-        display: inline-block;
+        display: flex;
+        align-items: inherit;
         margin-right: 1rem;
         font-size: 1.5rem;
         line-height: inherit;
         white-space: nowrap;
+
+        .brand-name {
+            font-size: 72px;
+        }
     }
 
     .nav-item {
-        font-size: 18px;
+        font-size: 24px;
     }
     
+
+    .nav-link {
+        transition: .3s;
+    }
+
+    .nav-link:hover {
+        color: white !important;
+    }
+
     .dropdown-menu {
         background-color: $dark-grey;
         .dropdown-item {
@@ -41,5 +66,23 @@
 
     #navbarSupportedContent {
         text-align: center;
+    }
+
+    .navbar-toggler {
+        position: absolute;
+        right: 0;
+        border: 0;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .nav-item {
+            font-size: 36px;
+        }       
+        #navbarSupportedContent {
+            top: 110px;
+            width: 100%;
+            border-radius: 8px;
+            background: #222222;
+        }
     }
 }

@@ -1,5 +1,6 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('http://fonts.cdnfonts.com/css/sandora');
 
 // Variables
 @import 'variables';
@@ -17,12 +18,8 @@
 @import './user_mgm.scss';
 @import './home.scss';
 
-main {
-    margin-top: 75px;
-}
-
 body, .table-dark {
-    background-color: $dark-grey;
+    background-color: $main-color;
 }
 
 .card .login-card {

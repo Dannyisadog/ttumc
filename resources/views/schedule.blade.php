@@ -5,11 +5,15 @@
 @section('style')
     <style>
         #schedule-container-pc{
+            margin-top: 30px;
             width: 100%;
             height: 100%;
         }
         table{
             text-align: center;
+        }
+        th {
+            font-size: 16px;
         }
         input[type="submit"], .add-button, .delete-button{
             background-color: #ffffff00;
@@ -23,7 +27,7 @@
 
 @section('content')
     <?php
-        $week = array("星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日");
+        $week = array("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
     ?>
     <div class="container" id="schedule-container-pc">
         <table class="table table-dark table-bordered">
@@ -43,7 +47,7 @@
                 <tr v-for="hour_schedule in schedules">
                     <td v-for="schedule in hour_schedule" class="table-item">
                         <button v-if="schedule.is_owner && !schedule.expired" @click="deleteSchedule(schedule.schedule_id)" class="btn btn-delete-schedule">${schedule.title} x</button>
-                        <button v-else-if="schedule.can_order" @click="checkSchedule(schedule.dateTime)" class="btn btn-primary btn-order">+</button>
+                        <button v-else-if="schedule.can_order" @click="checkSchedule(schedule.dateTime)" class="btn btn-primary btn-order">＋</button>
                         <div v-else>
                             ${ schedule.title }
                         </div>
@@ -80,7 +84,7 @@
                 <tbody>
                     <tr v-for="hour_schedule in schedules">
                         <td class="table-item">
-                            <button v-if="hour_schedule[0].is_owner && !hour_schedule[0].expired" @click="deleteSchedule(hour_schedule[0].schedule_id)" class="btn btn-delete-schedule">${hour_schedule[0].title} x</button>
+                            <button v-if="hour_schedule[0].is_owner && !hour_schedule[0].expired" @click="deleteSchedule(hour_schedule[0].schedule_id)" class="btn btn-delete-schedule">${hour_schedule[0].title} Ｘ</button>
                             <button v-else-if="hour_schedule[0].can_order" @click="checkSchedule(hour_schedule[0].dateTime)" class="btn btn-primary btn-order">+</button>
                             <div v-else>
                                 ${ hour_schedule[0].title }
@@ -101,7 +105,7 @@
     <!-- Modal -->
     <div class="modal fade" id="can-multi-order-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <div id="order-modal-content" class="modal-content" style="background-color: #212529;">
+            <div id="order-modal-content" class="modal-content" style="background-color: #111111;">
                 <div class="modal-header">
                     選擇預約身份
                 </div>

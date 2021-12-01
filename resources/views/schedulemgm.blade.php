@@ -23,7 +23,7 @@
 @endsection
 
 @section('content')
-    <div class="container">
+    <div class="container" style="margin-top: 30px;">
         <div style="display:flex; align-items:center">
             <div style="margin-right:10px;">
                 {{ Form::open(array('method' => 'put' ,'route' => 'pauseCourse')) }}

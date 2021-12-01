@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card login-card" style="background-color: #34383d; color: #fff;">
+            <div class="card login-card" style="background-color: #222222; color: #fff; margin-top: 30px;">
                 <div class="card-header" style="display:flex; justify-content:center;">{{ __('登入') }}</div>
 
                 <div class="card-body">
@@ -34,7 +34,7 @@
                             </div>
 
                             <div class="login-button-row">
-                                <button type="submit" class="btn btn-primary btn-block">
+                                <button type="submit" class="btn btn-primary btn-block btn-blue">
                                     {{ __('登入') }}
                                 </button>
                             </div>
