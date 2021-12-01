@@ -3,7 +3,7 @@
 @section('title', '使用者管理')
 
 @section('content')
-    <div class="container">
+    <div class="container" style="margin-top: 30px;">
         <table class="table table-dark table-bordered">
             <thead>
               <tr>

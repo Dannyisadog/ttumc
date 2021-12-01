@@ -1,7 +1,18 @@
 @import './variables';
+
+table {
+    background: #111111cf !important;
+}
+
+.table-item {
+    padding: 0 !important;
+    height: 65px;
+    font-size: 22px;
+}
+
 .container {
+    font-family: 'Sandora', sans-serif;
     .btn-order, .btn-selector, .btn-delete-schedule {
-        border: 1px solid #ffffff55;;
         background: $dark-grey;
         color: $white;
     }
@@ -13,7 +24,15 @@
 
     .btn-delete-schedule:hover {
         background: #e3342f;
-        border: 1px solid #e3342f;
+    }
+
+    .btn {
+        border: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        background: transparent;
+        font-size: 22px;
     }
 }
 

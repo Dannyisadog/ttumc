@@ -321,7 +321,7 @@ class ScheduleController extends BaseController
 
         Course::removeCourseThisWeek();
 
-        return redirect()->route('schedule');
+        return redirect()->route('schedulemgm');
     }
     public function resumeCourse(Request $request)
     {
@@ -333,7 +333,7 @@ class ScheduleController extends BaseController
 
         Course::createCourseThisWeek();
 
-        return redirect()->route('schedule');
+        return redirect()->route('schedulemgm');
     }
 
     public function getSchedules()
